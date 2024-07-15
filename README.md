@@ -5,6 +5,7 @@ links up with google spreadsheet
 
 # App Setup
 
+```
 ├── src
     ├── assets
     ├── components
@@ -13,6 +14,7 @@ links up with google spreadsheet
     └── pages
         ├── App.css
         └── App.jsx
+```
 
 ## Expanding the ESLint configuration
 
