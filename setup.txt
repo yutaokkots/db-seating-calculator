@@ -1,0 +1,11 @@
+MERN: 
+React / Express / Mongo Combination
+
+1. % npm create vite@latest
+✔ Project name: … dragonboat-seating
+✔ Select a framework: › React
+✔ Select a variant: › JavaScript
+  cd dragonboat-seating
+  npm install
+2. % npm i
+3. % npm run build
