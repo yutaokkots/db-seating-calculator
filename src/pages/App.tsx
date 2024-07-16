@@ -11,6 +11,11 @@ const App:React.FC = () => {
   const [count, setCount] = useState(0)
 
   useEffect(() => {
+      // load spreadsheet 
+      
+      // save spreadsheet info to localhost
+
+
       // Displays window size
       const handleResize = () => {
         setWindowSize({
