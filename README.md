@@ -5,6 +5,9 @@ links up with google spreadsheet
 
 # App Setup
 
+% npm run dev
+localhost:5175
+
 ```
 ├── src
     ├── assets
