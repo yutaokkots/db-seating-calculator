@@ -3,15 +3,15 @@
  * 
  */
 
-export const themeSetter = (sheetId: string) => {
+export const idSetter = (sheetId: string) => {
     localStorage.setItem("sheetId", sheetId);
 }
 
-export const themeGetter = ():string => {
-    const storedTheme = typeof window !== 'undefined'? localStorage.getItem("sheetId") : null;
-    if (storedTheme == null) {
+export const idGetter = ():string => {
+    const storedId = typeof window !== 'undefined'? localStorage.getItem("sheetId") : null;
+    if (storedId == null) {
         return "";
     } else {
-        return storedTheme;
+        return storedId;
     }
 }

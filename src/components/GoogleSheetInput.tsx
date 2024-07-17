@@ -1,14 +1,17 @@
 import React, { useState, ChangeEvent } from 'react'
 import { useSheetStore, SheetIdState } from '../lib/store'
-  // Global store that holds the sheetId for the google sheet url. 
-  
-  const GoogleSheetInput:React.FC = () => {
+import { idSetter } from '../utilities/sheetIdSetterGetter'
+
+const GoogleSheetInput:React.FC = () => {
+    // Global store that holds the sheetId for the google sheet url. 
     const {sheetIdState, setSheetIdState}:SheetIdState = useSheetStore()
+
     const [urlString, setUrlString] = useState("");
 
     const extractId = (url:string): string|null => {
         const regex = /\/d\/([a-zA-Z0-9_-]+)/;
         const match = url.match(regex);
+        console.log(match)
         return match ? match[1] : null;
     }
 
@@ -16,6 +19,7 @@ import { useSheetStore, SheetIdState } from '../lib/store'
         const extractedStr = extractId(urlStr)
         if (extractedStr && typeof extractedStr == "string"){
             setSheetIdState(extractedStr)
+            idSetter(extractedStr)
             console.log(sheetIdState)
         }
     }

@@ -3,37 +3,45 @@ import './App.css'
 import BoatInterface from '../components/BoatInterface'
 import { useSheetStore, SheetIdState } from '../lib/store'
 import GoogleSheetInput from '../components/GoogleSheetInput'
+import { idGetter } from '../utilities/sheetIdSetterGetter'
+import { loadData } from '../utilities/data-service'
 
-const googleSSUrl = import.meta.env.VITE_GOOGLE_SPREADSHEET_LINK
 
 const App:React.FC = () => {
   const [ windowSize, setWindowSize] = useState<{width: number; height: number;}>({
     width: window.innerWidth,
     height : window.innerHeight
   })
-  const [ssId, setSsId] = useState<string|null>("")
-
   // Global store that holds the sheetId for the google sheet url. 
-  const {sheetIdState, setSheetIdState}:SheetIdState = useSheetStore()
+  const { sheetIdState, setSheetIdState }:SheetIdState = useSheetStore()
+  const [paddlerData, setPaddlerData] = useState({});
 
-  // extracts the spreadsheet id from the url string, 
-  const extractId = (url:string): string|null => {
-    const regex = /\/d\/([a-zA-Z0-9_-]+)/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
+  const loadSSData = async() => {
+    await loadData()
+      .then((res) => {
+        setPaddlerData(res)
+        return res
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
   }
-  
+
   useEffect(() => {
-      // load spreadsheet 
-      if (googleSSUrl){
-        const extractedStr = extractId(googleSSUrl)
-        if (extractedStr){
-          setSsId(extractedStr)
-          setSheetIdState(extractedStr)
-          console.log(ssId)
-          console.log(sheetIdState)
-        }
-      }
+      // load spreadsheet from localhost
+      // const currentId = idGetter()
+      // if (currentId){
+      //   setSheetIdState(currentId)
+      //   loadData(currentId)
+      // }
+      
+      loadSSData()
+
+
 
       // save spreadsheet info to localhost
 
