@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import BoatInterface from '../components/BoatInterface'
-import { useSheetStore, SheetIdState } from '../lib/store'
-import GoogleSheetInput from '../components/GoogleSheetInput'
-import { idGetter } from '../utilities/sheetIdSetterGetter'
+import { paddlerDataStore, usePaddlerDataStore, Paddler } from '../lib/store'
 import { loadData } from '../utilities/data-service'
-
+import Loading from '../components/Loading'
 
 const App:React.FC = () => {
   const [ windowSize, setWindowSize] = useState<{width: number; height: number;}>({
@@ -13,38 +11,50 @@ const App:React.FC = () => {
     height : window.innerHeight
   })
   // Global store that holds the sheetId for the google sheet url. 
-  const { sheetIdState, setSheetIdState }:SheetIdState = useSheetStore()
-  const [paddlerData, setPaddlerData] = useState({});
+  const { setPaddlersState, activeRosterState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
+  // Local states
+
+
+  const filterRoster = (data: Paddler[]): Paddler[] => {
+    return data
+        .filter((item) => item.roster == true)
+        .map((item) => ({
+          ...item,
+          boat_pos: "none"
+        })
+       )
+  }
 
   const loadSSData = async() => {
     await loadData()
       .then((res) => {
-        setPaddlerData(res)
+        // Loads paddlersState to hold all information.
+        if (res){
+          setPaddlersState(res)
+        }
         return res
       })
-      .then((res) => {
-        console.log(res)
+      .then((res)=>{  
+        if (res){
+          const rosterPaddlerObjects: Paddler[] = filterRoster(res)
+          setRosterState(rosterPaddlerObjects) 
+
+          // const names = rosterPaddlerObjects.map(item => item.name)
+          // setRosterList(names)
+        }
+        console.log(activeRosterState)
+        //console.log(rosterList)
       })
       .catch(err => {
         console.log(err)
       })
-
   }
 
   useEffect(() => {
-      // load spreadsheet from localhost
-      // const currentId = idGetter()
-      // if (currentId){
-      //   setSheetIdState(currentId)
-      //   loadData(currentId)
-      // }
-      
+      // loads data from google spreadsheet 
       loadSSData()
 
-
-
       // save spreadsheet info to localhost
-
 
       // Displays window size
       const handleResize = () => {
@@ -60,6 +70,7 @@ const App:React.FC = () => {
         window.removeEventListener('resize', handleResize)
       }
   }, [])
+
   return (
     <>
       <div>
@@ -67,10 +78,10 @@ const App:React.FC = () => {
           Dragon Boat Seat Placer
         </div>
         <div className="flex justify-center">
-          <GoogleSheetInput />
+          <Loading />
         </div>
         <div className="flex justify-center">
-          <BoatInterface windowSize={windowSize}/>
+          <BoatInterface windowSize={windowSize} />
         </div>
       </div>
     </>

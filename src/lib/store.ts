@@ -24,3 +24,49 @@ export const useSheetStore = create<SheetIdState>((set) => ({
         })
     }
 }))
+
+/** 
+* State holding the paddler information..
+* @state {string |null} paddlersState - list of paddler objects.
+* @function setPaddlersState - sets the paddlersState. 
+*/
+
+
+
+export interface Paddler {
+    name: string;    
+    weight: number;    
+    adj_perg_500_sec: number;    
+    position: string;    
+    stroke: boolean;    
+    pacer: boolean;    
+    engine: boolean;    
+    rocket: boolean;    
+    drummer: boolean;    
+    stern: boolean;    
+    side_preference: number;
+    roster: boolean;
+    boat_pos?: string;
+}
+
+export interface paddlerDataStore {
+    paddlersState: Paddler[];
+    activeRosterState: Paddler[]
+    setPaddlersState: (paddlerData: Paddler[]) => void;
+    setRosterState: (paddlerData: Paddler[]) => void;
+}
+
+export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
+    paddlersState: [],
+    activeRosterState: [],
+    setPaddlersState: (paddlerData) => {
+        set({
+            paddlersState: paddlerData
+        })
+    },
+    setRosterState: (paddlerData) => {
+        set({
+            activeRosterState: paddlerData
+        })
+    }
+}))
