@@ -40,11 +40,7 @@ const App:React.FC = () => {
         if (res){
           const rosterPaddlerObjects: Paddler[] = filterRoster(res)
           setRosterState(rosterPaddlerObjects) 
-
-          // const names = rosterPaddlerObjects.map(item => item.name)
-          // setRosterList(names)
         }
-        //console.log(rosterList)
       })
       .catch(err => {
         console.log(err)
@@ -75,8 +71,8 @@ const App:React.FC = () => {
   return (
     <>
       <div>
-        <div className="text-red-500 text-lg">
-          Dragon Boat Seat Placer
+        <div className="text-black text-2xl">
+          RPT Dragon Boat Seat Placement
         </div>
         <div className="flex justify-center">
           <Loading />

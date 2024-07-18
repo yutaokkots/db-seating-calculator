@@ -1,9 +1,21 @@
 import React from 'react'
+import { SeatSelectionType } from './Seating';
 
-const SeatingDelete:React.FC = () => {
+interface SeatingDeleteProps{
+    rowNum: number;
+    position:string;
+    deleteSeatSelection: SeatSelectionType; 
+}
+
+const SeatingDelete:React.FC<SeatingDeleteProps> = ({ rowNum, position, deleteSeatSelection }) => {
+    const handleClick = () => {
+        deleteSeatSelection("", rowNum, position)
+    }
+
     return (
         <>
             <button 
+                onClick={handleClick}
                 className="rounded-sm bg-red-200">
                 <div className="flex justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 text-white">

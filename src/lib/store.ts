@@ -31,8 +31,6 @@ export const useSheetStore = create<SheetIdState>((set) => ({
 * @function setPaddlersState - sets the paddlersState. 
 */
 
-
-
 export interface Paddler {
     name: string;    
     weight: number;    
@@ -67,16 +65,7 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
             paddlersState: paddlerData
         })
     },
-    // setRosterState: (paddlerData) => {
-    //     set({
-    //         activeRosterState: paddlerData
-    //     })
-    // }
-    // setRosterState: (updateFn) => {        
-    //     set((state) => ({            
-    //         activeRosterState: updateFn(state.activeRosterState)        
-    //     }));    
-    // }
+
     setRosterState: (updateFnOrData) => {
         set((state) => ({
             activeRosterState:

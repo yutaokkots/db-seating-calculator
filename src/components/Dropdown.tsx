@@ -1,57 +1,42 @@
-import React, { useState, useEffect } from 'react'
-import { Selection, ChangePaddlerStatus } from './Boat';
-import { paddlerDataStore, usePaddlerDataStore, Paddler } from '../lib/store'
-
+import React from 'react'
+import { ChangePaddlerStatus } from './Boat';
+import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
+import { SeatSelectionType } from './Seating';
+import { SeatSelectionStatusType } from './Seating'
 
 interface DropdownProps{
     rowNum: number;
     position:string;
-    paddlerSelection: Selection[];
     changePaddlerStatus: ChangePaddlerStatus;
+    editSeatSelection: SeatSelectionType;
+    selectedPaddlerInfo: SeatSelectionStatusType;
 }
 
-const Dropdown:React.FC<DropdownProps> = ({ rowNum, position, paddlerSelection, changePaddlerStatus }) => {
+const Dropdown:React.FC<DropdownProps> = ({ rowNum, position, changePaddlerStatus, editSeatSelection, selectedPaddlerInfo }) => {
     const { activeRosterState }:paddlerDataStore = usePaddlerDataStore()
-    //const [selectedPaddler, setSelectedPaddler] = useState<string>("");
 
     const handleDropdown = (evt: React.ChangeEvent<HTMLSelectElement>): void => {
         const selectedPaddler = evt.target.value
         changePaddlerStatus(selectedPaddler, rowNum, position)
-
+        editSeatSelection(selectedPaddler, rowNum, position)
     }
-
-    const updateDropdown = () => {
-
-    }
-
-
-    useEffect(() => {
-
-        // setSelectedPaddler()
-        
-    }, [activeRosterState])
-
 
     return (
         <>
             <select
                 className="w-full p-1 rounded-md"
-                onChange={handleDropdown}
-                >
-                <option >Select</option>
-                
-                {activeRosterState.map((paddlerInfo, idx) => (
-
-                    <option 
-                        key={ idx }
-                        name={paddlerInfo.name ?? ""}
-                        value={paddlerInfo.name ?? ""}
-                        disabled={paddlerInfo.row > -1}
-                        >
-                        {paddlerInfo.name} ({paddlerInfo.weight})
-                    </option>
-                ))
-                }
+                value={selectedPaddlerInfo.paddlerName}
+                onChange={handleDropdown} >
+                <option >- -</option> 
+                    {activeRosterState.map((paddlerInfo, idx) => (
+                        <option 
+                            key={ idx }
+                            value={paddlerInfo.name ?? ""}
+                            disabled={paddlerInfo.row ? paddlerInfo.row > -1  : false} >
+                                {paddlerInfo.name} ({paddlerInfo.weight})
+                        </option>
+                    ))
+                    }
             </select>
         </> 
     )
