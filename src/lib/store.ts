@@ -46,6 +46,7 @@ export interface Paddler {
     stern: boolean;    
     side_preference: number;
     roster: boolean;
+    row?:number;
     boat_pos?: string;
 }
 
@@ -53,7 +54,9 @@ export interface paddlerDataStore {
     paddlersState: Paddler[];
     activeRosterState: Paddler[]
     setPaddlersState: (paddlerData: Paddler[]) => void;
-    setRosterState: (paddlerData: Paddler[]) => void;
+    //setRosterState: (paddlerData: Paddler[]) => void;
+    setRosterState: (updateFnOrData: Paddler[] | ((prevState: Paddler[]) => Paddler[])) => void;
+    //setRosterState: (updateFn: (prevState: Paddler[]) => Paddler[]) => void;
 }
 
 export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
@@ -64,9 +67,22 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
             paddlersState: paddlerData
         })
     },
-    setRosterState: (paddlerData) => {
-        set({
-            activeRosterState: paddlerData
-        })
+    // setRosterState: (paddlerData) => {
+    //     set({
+    //         activeRosterState: paddlerData
+    //     })
+    // }
+    // setRosterState: (updateFn) => {        
+    //     set((state) => ({            
+    //         activeRosterState: updateFn(state.activeRosterState)        
+    //     }));    
+    // }
+    setRosterState: (updateFnOrData) => {
+        set((state) => ({
+            activeRosterState:
+                typeof updateFnOrData === "function"
+                ? updateFnOrData(state.activeRosterState)
+                : updateFnOrData
+        }))
     }
 }))

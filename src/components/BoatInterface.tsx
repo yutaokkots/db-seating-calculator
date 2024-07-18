@@ -46,10 +46,8 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                             </div>
                         </div>
                     }
-
                 </div>
             </div>
-
         </>
     )
 }

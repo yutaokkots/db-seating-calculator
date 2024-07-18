@@ -11,7 +11,7 @@ const App:React.FC = () => {
     height : window.innerHeight
   })
   // Global store that holds the sheetId for the google sheet url. 
-  const { setPaddlersState, activeRosterState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
+  const { setPaddlersState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
   // Local states
 
 
@@ -20,10 +20,12 @@ const App:React.FC = () => {
         .filter((item) => item.roster == true)
         .map((item) => ({
           ...item,
-          boat_pos: "none"
+          boat_pos: "none",
+          row: -1
         })
        )
   }
+ 
 
   const loadSSData = async() => {
     await loadData()
@@ -42,7 +44,6 @@ const App:React.FC = () => {
           // const names = rosterPaddlerObjects.map(item => item.name)
           // setRosterList(names)
         }
-        console.log(activeRosterState)
         //console.log(rosterList)
       })
       .catch(err => {
