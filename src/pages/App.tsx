@@ -6,15 +6,16 @@ import { loadData } from '../utilities/data-service'
 import Loading from '../components/Loading'
 
 const App:React.FC = () => {
+  // Dynamic window sizing for responsive UI.  
   const [ windowSize, setWindowSize] = useState<{width: number; height: number;}>({
     width: window.innerWidth,
     height : window.innerHeight
   })
-  // Global store that holds the sheetId for the google sheet url. 
+
+  // Global store that holds list of Paddler objects. 
   const { setPaddlersState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
-  // Local states
 
-
+  // Selects/filters data to include only those where item.roster == true.
   const filterRoster = (data: Paddler[]): Paddler[] => {
     return data
         .filter((item) => item.roster == true)
@@ -26,17 +27,18 @@ const App:React.FC = () => {
        )
   }
  
-
+  // Loads data from google spreadsheet.
   const loadSSData = async() => {
     await loadData()
       .then((res) => {
-        // Loads paddlersState to hold all information.
+        // Loads paddlersState to load all information from external resource.
         if (res){
           setPaddlersState(res)
         }
         return res
       })
       .then((res)=>{  
+        // Refines paddler information to include only those in roster.
         if (res){
           const rosterPaddlerObjects: Paddler[] = filterRoster(res)
           setRosterState(rosterPaddlerObjects) 
@@ -48,12 +50,10 @@ const App:React.FC = () => {
   }
 
   useEffect(() => {
-      // loads data from google spreadsheet 
+      // Loads data into global stores.
       loadSSData()
 
-      // save spreadsheet info to localhost
-
-      // Displays window size
+      // Set and handles change in window size.
       const handleResize = () => {
         setWindowSize({
             width: window.innerWidth,
@@ -62,7 +62,7 @@ const App:React.FC = () => {
       }
       window.addEventListener('resize', handleResize);
 
-      // Unmounting this component removes the eventListener and terminates worker thread.
+      // Unmounting this component removes the eventListener.
       return () => {
         window.removeEventListener('resize', handleResize)
       }

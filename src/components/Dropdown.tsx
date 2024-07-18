@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { ChangePaddlerStatus } from './Boat';
 import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 import { SeatSelectionType } from './Seating';
@@ -13,6 +13,31 @@ interface DropdownProps{
 }
 
 const Dropdown:React.FC<DropdownProps> = ({ rowNum, position, changePaddlerStatus, editSeatSelection, selectedPaddlerInfo }) => {
+    const [ drummerTrue, setDrummerTrue ] = useState<boolean>(false);
+    const [ sternTrue, setSternTrue ] = useState<boolean>(false);
+    const [ paddlerTrue, setPaddlerTrue ] = useState<boolean>(false);
+    useEffect(()=>{
+
+        if (position == "drum"){
+            setDrummerTrue(true)
+        }
+        if (position == "stern"){
+            setSternTrue(true)
+        }
+        if (position == "left" || position=="right"){
+            setPaddlerTrue(true)
+        }
+    },[])
+
+    /// I want disabled to be true if
+    //  the component has drummerTrue=true
+    // and 
+    // paddlerInfo.drummer == false <= means this paddler is not a drummer
+
+
+    // || !(paddlerInfo.drummer && drummerTrue) 
+    //                             || !(paddlerInfo.stern && sternTrue)
+
     const { activeRosterState }:paddlerDataStore = usePaddlerDataStore()
 
     const handleDropdown = (evt: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -32,8 +57,12 @@ const Dropdown:React.FC<DropdownProps> = ({ rowNum, position, changePaddlerStatu
                         <option 
                             key={ idx }
                             value={paddlerInfo.name ?? ""}
-                            disabled={paddlerInfo.row ? paddlerInfo.row > -1  : false} >
-                                {paddlerInfo.name} ({paddlerInfo.weight})
+                            disabled={!!(paddlerInfo.row && paddlerInfo.row > -1)
+                                || drummerTrue && paddlerInfo.drummer == false
+                                || sternTrue && paddlerInfo.stern == false
+                                || paddlerTrue && !(paddlerInfo.engine || paddlerInfo.rocket  || paddlerInfo.pacer || paddlerInfo.stroke )
+                            }>
+                                {paddlerInfo.name} ({paddlerInfo.weight}) 
                         </option>
                     ))
                     }

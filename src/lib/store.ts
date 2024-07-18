@@ -6,29 +6,11 @@
 import { create } from 'zustand'
 
 /** 
-* State holding the id (string) for the google spreadsheet url.
-* @state {string |null} sheetIdState - represents the string for the google spreadsheet id.
-* @function sheetIdStateSetter - sets the sheetIdState. 
-*/
-
-export interface SheetIdState {
-    sheetIdState: string;
-    setSheetIdState: (sheetId: string) => void;
-}
-
-export const useSheetStore = create<SheetIdState>((set) => ({
-    sheetIdState: '',
-    setSheetIdState: (sheetId) => {
-        set({
-            sheetIdState: sheetId
-        })
-    }
-}))
-
-/** 
-* State holding the paddler information..
-* @state {string |null} paddlersState - list of paddler objects.
+* States holding the paddler information.
+* @state {Paddler[]} paddlersState - holds initial data (all information retrieved from external source).
+* @state {Paddler[]} activeRosterState - all active paddlers, as determined by Paddler.roster (true).
 * @function setPaddlersState - sets the paddlersState. 
+* @function setRosterState - sets the rosterState. 
 */
 
 export interface Paddler {
@@ -52,9 +34,7 @@ export interface paddlerDataStore {
     paddlersState: Paddler[];
     activeRosterState: Paddler[]
     setPaddlersState: (paddlerData: Paddler[]) => void;
-    //setRosterState: (paddlerData: Paddler[]) => void;
     setRosterState: (updateFnOrData: Paddler[] | ((prevState: Paddler[]) => Paddler[])) => void;
-    //setRosterState: (updateFn: (prevState: Paddler[]) => Paddler[]) => void;
 }
 
 export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
@@ -65,7 +45,6 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
             paddlersState: paddlerData
         })
     },
-
     setRosterState: (updateFnOrData) => {
         set((state) => ({
             activeRosterState:

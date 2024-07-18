@@ -6,7 +6,6 @@ interface RosterItemProp{
     paddler:Paddler
 }
 
-
 const RosterItem:React.FC<RosterItemProp> = ({ paddler }) => {
     return (
         <>

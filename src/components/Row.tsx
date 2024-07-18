@@ -11,7 +11,7 @@ interface RowProp {
 const Row:React.FC<RowProp> = ({ rowNum, changePaddlerStatus, resetSeat }) => {
     return (
         <>
-            <div className="grid grid-cols-11">
+            <div className="grid grid-cols-11 ">
                 <div className="col-span-5">    
                     <Seating 
                         rowNum={ rowNum }

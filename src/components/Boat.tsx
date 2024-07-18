@@ -63,11 +63,11 @@ const Boat:React.FC = () => {
         <>
             <div>
                 <div className="relative w-[300px] h-[70px]">
-                    <div className="absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-b-[70px] border-b-red-50 rounded-t-[20px]">
+                    <div className=" absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-b-[70px] border-b-white rounded-t-[20px]">
                     </div>
-                    <div className="absolute inset-x-0 bottom-0 flex justify-center ">
+                    <div className="absolute inset-x-0 bottom-0 flex justify-center  ">
                         <div className="flex flex-col w-[50%] mb-2">                       
-                            <div>drummer</div>
+                            <div>drummer/coach</div>
                             <div>
                                 <Seating 
                                     rowNum={ 15 }
@@ -78,7 +78,7 @@ const Boat:React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-[300px] h-[400px] bg-red-50 ">
+                <div className="w-[300px] h-[400px] bg-white px-1">
                     <div className="flex flex-col justify-between h-full">
                     {
                         rows.map((r, idx) => (
@@ -92,7 +92,7 @@ const Boat:React.FC = () => {
                     </div>
                 </div>
                 <div className="relative w-[300px] h-[70px]">
-                    <div className="absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-t-[70px] border-t-red-50 ">
+                    <div className="absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-t-[70px] border-t-white ">
                     </div>
                     <div className="absolute inset-x-0 top-0 flex justify-center ">
                         <div className="flex flex-col w-[50%] mt-2">                       
