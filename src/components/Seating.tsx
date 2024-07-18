@@ -13,7 +13,6 @@ interface SeatingProps{
 export type SeatSelectionType = (paddlerName: string, row: number, pos: string) => void;
 export type SeatSelectionStatusType = { paddlerName: string, row: number, pos:string}
 
-
 const Seating:React.FC<SeatingProps> = ({ rowNum, position, changePaddlerStatus, resetSeat }) => {
     const [selectedPaddlerInfo, setSelectedPaddlerInfo] = useState<SeatSelectionStatusType>({ paddlerName: "", row: -1 , pos: ""});
 
@@ -44,7 +43,6 @@ const Seating:React.FC<SeatingProps> = ({ rowNum, position, changePaddlerStatus,
                         editSeatSelection={ editSeatSelection }
                         selectedPaddlerInfo={ selectedPaddlerInfo } />
                 </div>
-
             </div>
         </>
     )

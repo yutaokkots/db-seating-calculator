@@ -1,7 +1,6 @@
 import React from 'react'
 import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 
-
 const Loading:React.FC = () => {
     const { paddlersState }:paddlerDataStore = usePaddlerDataStore()
 
@@ -12,7 +11,6 @@ const Loading:React.FC = () => {
             <div>Loading</div>
             :
             <div>Ready</div>
-
         }
         </>
     )

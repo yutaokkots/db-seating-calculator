@@ -7,7 +7,7 @@ interface BoatInterfaceProps {
     windowSize: WindowSize;
 }
 
-interface WindowSize{
+export interface WindowSize{
     width: number;
     height: number;
 }
@@ -18,6 +18,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
     const [rightWeight, setRightWeight] = useState<number>(0);
     const [frontWeight, setFrontWeight] = useState<number>(0);
     const [backWeight, setBackWeight] = useState<number>(0);
+    const [totalWeight, setTotalWeight] = useState<number>(0);
     const [leftStrength, setLeftStrength] = useState<number>(0);
     const [rightStrength, setRightStrength] = useState<number>(0);
     const [frontStrength, setFrontStrength] = useState<number>(0);
@@ -56,6 +57,12 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                 paddler.row 
                 && paddler.row > 5 
                 && paddler.row < 12)
+            .reduce((sum, paddler) => sum + paddler.weight, 0);
+        
+        const total = activeRosterState
+            .filter((paddler) => 
+                paddler.row 
+                && paddler.row > 0)
             .reduce((sum, paddler) => sum + paddler.weight, 0);
 
         const drumStern = activeRosterState
@@ -101,6 +108,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
         setRightWeight(right)
         setFrontWeight(front)
         setBackWeight(back)
+        setTotalWeight(total)
         setLeftStrength(leftStr)
         setRightStrength(rightStr)
         setFrontStrength(frontStr)
@@ -113,7 +121,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
             <div className="flex flex-col border-2 pb-1 pt-1 border-[#113758] bg-[#113758] rounded-xl w-[370px] sm:w-[500px] md:w-[600px] justify-center">
                 <div className="m-2 flex justify-between items-center  border-2 bg-slate-50 rounded-lg p-2">
                     <div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[75px] sm:w-[130px] ">
+                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
                             <div>
                                 {windowSize.width >= 640 ?  "Port/Left" : "L"} 
                             </div>
@@ -130,7 +138,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                         </div>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <div className="bg-slate-200 rounded-md p-1 w-[75px] sm:w-[130px] ">
+                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
                             <div>
                                 {windowSize.width >= 640 ?  "Front" : "F"} 
                             </div>
@@ -145,7 +153,17 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                                 }
                             </div>
                         </div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[75px] sm:w-[130px] ">
+                        <div className="bg-blue-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
+                            <div>
+                                Total
+                            </div>
+                            <div className="bg-white rounded-sm p-1">
+                                <div>    
+                                    {totalWeight} lbs
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
                             <div>
                                 {windowSize.width >= 640 ?  "Back" : "B"} 
                             </div>
@@ -162,7 +180,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                         </div>
                     </div>
                     <div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[75px] sm:w-[130px] ">
+                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
                             <div>
                                 {windowSize.width >= 640 ?  "Starboard/Right" : "R"}
                             </div>
@@ -184,21 +202,21 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                         <Boat/>
                     </div>
                     {windowSize.width >= 640 && 
-                        <div className="w-[95px] sm:w-[140px] md:w-[250px] border-2 rounded-md border-gray-100 p-2 bg-white">
+                        <div className="w-[95px] sm:w-[140px] md:w-[250px] border-2 rounded-md border-gray-100 p-2  bg-slate-200 ">
                             <div>Roster</div>
-                            <div className="text-left">
-                            { activeRosterState.length == 0 
-                                ? 
-                                (
-                                    <div></div>
-                                )
-                                :
-                                ( 
-                                    activeRosterState.map((p, idx) => (
-                                        <RosterItem key={idx} paddler={p}/>  
-                                    ))
-                                )
-                            }
+                            <div className="text-left bg-white p-1 rounded-md h-auto">
+                                { activeRosterState.length == 0 
+                                    ? 
+                                    (
+                                        <div></div>
+                                    )
+                                    :
+                                    ( 
+                                        activeRosterState.map((p, idx) => (
+                                            <RosterItem key={idx} paddler={p} windowSize={windowSize}/>  
+                                        ))
+                                    )
+                                }
                             </div>
                         </div>
                     }

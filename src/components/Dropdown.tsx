@@ -16,8 +16,8 @@ const Dropdown:React.FC<DropdownProps> = ({ rowNum, position, changePaddlerStatu
     const [ drummerTrue, setDrummerTrue ] = useState<boolean>(false);
     const [ sternTrue, setSternTrue ] = useState<boolean>(false);
     const [ paddlerTrue, setPaddlerTrue ] = useState<boolean>(false);
+    
     useEffect(()=>{
-
         if (position == "drum"){
             setDrummerTrue(true)
         }
@@ -28,15 +28,6 @@ const Dropdown:React.FC<DropdownProps> = ({ rowNum, position, changePaddlerStatu
             setPaddlerTrue(true)
         }
     },[])
-
-    /// I want disabled to be true if
-    //  the component has drummerTrue=true
-    // and 
-    // paddlerInfo.drummer == false <= means this paddler is not a drummer
-
-
-    // || !(paddlerInfo.drummer && drummerTrue) 
-    //                             || !(paddlerInfo.stern && sternTrue)
 
     const { activeRosterState }:paddlerDataStore = usePaddlerDataStore()
 
@@ -64,7 +55,7 @@ const Dropdown:React.FC<DropdownProps> = ({ rowNum, position, changePaddlerStatu
                             }>
                                 {paddlerInfo.name} ({paddlerInfo.weight}) 
                         </option>
-                    ))
+                        ))
                     }
             </select>
         </> 

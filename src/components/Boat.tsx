@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 import Row from './Row';
 import Seating from './Seating';
@@ -55,10 +55,6 @@ const Boat:React.FC = () => {
             )
         }
     
-    useEffect(() => {
-
-    }, [])
-
     return (
         <>
             <div>
