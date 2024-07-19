@@ -4,6 +4,7 @@ import BoatInterface from '../components/BoatInterface'
 import { paddlerDataStore, usePaddlerDataStore, Paddler } from '../lib/store'
 import { loadData } from '../utilities/data-service'
 import Loading from '../components/Loading'
+import DropdownCustom from '../components/DropdownCustom'
 
 const App:React.FC = () => {
   // Dynamic window sizing for responsive UI.  
@@ -13,7 +14,7 @@ const App:React.FC = () => {
   })
 
   // Global store that holds list of Paddler objects. 
-  const { setPaddlersState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
+  const { setPaddlersState, setRosterState, activeRosterState }:paddlerDataStore = usePaddlerDataStore()
 
   // Selects/filters data to include only those where item.roster == true.
   const filterRoster = (data: Paddler[]): Paddler[] => {
@@ -61,7 +62,7 @@ const App:React.FC = () => {
         })
       }
       window.addEventListener('resize', handleResize);
-
+      
       // Unmounting this component removes the eventListener.
       return () => {
         window.removeEventListener('resize', handleResize)
@@ -71,6 +72,7 @@ const App:React.FC = () => {
   return (
     <>
       <div>
+        <DropdownCustom />
         <div className="text-black text-2xl">
           RPT Dragon Boat Seat Placement
         </div>

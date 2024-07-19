@@ -35,6 +35,7 @@ export interface paddlerDataStore {
     activeRosterState: Paddler[]
     setPaddlersState: (paddlerData: Paddler[]) => void;
     setRosterState: (updateFnOrData: Paddler[] | ((prevState: Paddler[]) => Paddler[])) => void;
+    addPaddlerToRoster: (newPaddler: Paddler) => void;
 }
 
 export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
@@ -52,5 +53,31 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
                 ? updateFnOrData(state.activeRosterState)
                 : updateFnOrData
         }))
+    },
+    addPaddlerToRoster: (newPaddler) => {
+        set((state) => ({
+            activeRosterState: [...state.activeRosterState, newPaddler]
+        }))
+    }
+
+}))
+
+
+/** 
+* States holding the modal information.
+* @state {} modalState - boolean for whether modal is open for entering paddler information.
+* @function setModalState - sets the modalState. 
+*/
+
+export interface ModalDataStore {
+    modalState: boolean;
+    setModalState: (status:boolean) => void;
+}
+
+export const useModalDataStore = create<ModalDataStore>((set) => ({
+    modalState: false,
+    setModalState: (status: boolean) => {
+        set({modalState: status})
     }
 }))
+

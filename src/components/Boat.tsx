@@ -3,6 +3,7 @@ import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 import Row from './Row';
 import Seating from './Seating';
 
+
 export interface ChangePaddlerStatus {
     (
         paddlerName: string,
@@ -38,26 +39,47 @@ const Boat:React.FC = () => {
         )
     }
 
+    
+
     // changePaddlerStatus() makes a change to the global state for the Roster.
     const changePaddlerStatus: ChangePaddlerStatus = (
             paddlerName,
             newRow = -1,
             newBoatPos = "none",
         ) => {
-            resetSeat(paddlerName, newRow, newBoatPos)
+            setRosterState(prevSelection => {
+                // First, reset any paddler that was in the new position
+                const resetOldPosition = prevSelection.map(paddler => 
+                  (paddler.row === newRow && paddler.boat_pos === newBoatPos)
+                    ? {...paddler, row: -1, boat_pos: "none"}
+                    : paddler
+                );
+            
+                // Then, update the selected paddler's position
+                return resetOldPosition.map(paddler => 
+                  paddler.name === paddlerName
+                    ? {...paddler, row: newRow, boat_pos: newBoatPos}
+                    : (paddler.name === paddlerName && (newRow === -1 || newBoatPos === "none"))
+                      ? {...paddler, row: -1, boat_pos: "none"}
+                      : paddler
+                );
+              });
+            };
+            //     resetSeat(paddlerName, newRow, newBoatPos)
 
-            setRosterState(prevSelection => 
-                prevSelection.map(paddler => 
-                    paddler.name == paddlerName 
-                        ? {...paddler, row: newRow, boat_pos: newBoatPos}
-                        : paddler
-                )
-            )
-        }
+        //     setRosterState(prevSelection => 
+        //         prevSelection.map(paddler => 
+        //             paddler.name == paddlerName 
+        //                 ? {...paddler, row: newRow, boat_pos: newBoatPos}
+        //                 : paddler
+        //         )
+        //     )
+        // }
     
     return (
         <>
             <div>
+
                 <div className="relative w-[300px] h-[70px]">
                     <div className=" absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-b-[70px] border-b-white rounded-t-[20px]">
                     </div>
