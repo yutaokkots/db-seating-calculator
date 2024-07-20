@@ -4,7 +4,7 @@ import BoatInterface from '../components/BoatInterface'
 import { paddlerDataStore, usePaddlerDataStore, Paddler } from '../lib/store'
 import { loadData } from '../utilities/data-service'
 import Loading from '../components/Loading'
-import DropdownCustom from '../components/DropdownCustom'
+import DropdownCustom from '../components/assets/DropdownCustom'
 
 const App:React.FC = () => {
   // Dynamic window sizing for responsive UI.  
@@ -72,7 +72,6 @@ const App:React.FC = () => {
   return (
     <>
       <div>
-        <DropdownCustom />
         <div className="text-black text-2xl">
           RPT Dragon Boat Seat Placement
         </div>
