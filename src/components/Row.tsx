@@ -1,23 +1,18 @@
 import React from 'react'
 import Seating from './Seating'
-import { ChangePaddlerStatus } from './Boat';
 
 interface RowProp {
     rowNum: number;
-    changePaddlerStatus: ChangePaddlerStatus;
-    resetSeat: ChangePaddlerStatus;
 }
 
-const Row:React.FC<RowProp> = ({ rowNum, changePaddlerStatus, resetSeat }) => {
+const Row:React.FC<RowProp> = ({ rowNum }) => {
     return (
         <>
             <div className="grid grid-cols-11 ">
                 <div className="col-span-5">    
                     <Seating 
                         rowNum={ rowNum }
-                        position={"left"} 
-                        changePaddlerStatus={ changePaddlerStatus } 
-                        resetSeat={  resetSeat } />
+                        position={"left"} />
                 </div>
                 <div className="col-span-1">
                     {rowNum}
@@ -25,9 +20,7 @@ const Row:React.FC<RowProp> = ({ rowNum, changePaddlerStatus, resetSeat }) => {
                 <div className="col-span-5">
                     <Seating 
                         rowNum={ rowNum }
-                        position={"right"} 
-                        changePaddlerStatus={ changePaddlerStatus }
-                        resetSeat={  resetSeat } />
+                        position={"right"}  />
                 </div>
             </div>
         </>

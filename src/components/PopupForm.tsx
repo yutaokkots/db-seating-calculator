@@ -1,38 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useModalDataStore, ModalDataStore, usePaddlerDataStore, Paddler, paddlerDataStore} from '../lib/store';
-import { SelectedPosition } from './Dropdown';
+import { SelectedPosition } from './assets/DropdownCustom';
 
 type FormInfoType = {
     name: string;
     weight: number;
 }
 
-const newPaddler: Paddler = {
-    name: '',
-    weight: 0,
-    adj_perg_500_sec: 0,
-    position: 'engine',
-    stroke: true,
-    pacer: true,
-    engine: true,
-    rocket: true,
-    drummer: true,
-    stern: true,
-    side_preference: 0,
-    roster: true
-};
-
 interface PopupFormProps {
     rowNum: number;
-    position: string; 
+    leftRightPosition: number; 
     selectedPosition: SelectedPosition;
+    setSelectedPaddler: React.Dispatch<React.SetStateAction<Paddler>>;
 }
 
-const PopupForm:React.FC<PopupFormProps> = ({ rowNum, position, selectedPosition }) => {
-    //const [ showPopup, setShowPopup ] = useState<boolean>(true);
+const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selectedPosition, setSelectedPaddler }) => {
     const [ formInfo, setFormInfo ] = useState<FormInfoType>({ name: "", weight: 0});
     const { modalState, setModalState }:ModalDataStore = useModalDataStore();
-    const { addPaddlerToRoster }: paddlerDataStore = usePaddlerDataStore();
+    const { addPaddlerToRoster, activeRosterState }: paddlerDataStore = usePaddlerDataStore();
+    const [ error, setError ] = useState<boolean>(false)
+    const [ weightError, setWeightError ] = useState<boolean>(false)
+
+    useEffect(() => {
+        const isNameFound = activeRosterState.some(paddler => paddler.name.toLowerCase() === formInfo.name.toLowerCase());
+        setError(isNameFound);
+        console.log(formInfo.name, isNameFound)
+    }, [formInfo.name])
+
+    useEffect(() => {
+        const isNumeric = /^\d+$/.test(`${formInfo.weight}`);
+        const isValidWeight = formInfo.weight > 400 || formInfo.weight < 0 || !isNumeric
+        setWeightError(isValidWeight);
+    }, [formInfo.weight])
 
     const closeModal = () => {
         setModalState(false)
@@ -46,30 +45,53 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, position, selectedPosition
         )
     }
 
+    const findLastId = () => {
+        return activeRosterState.reduce((maxId, paddler) => {
+            return paddler.id > maxId ? paddler.id : maxId;
+        }, 0) 
+    }
+
     const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
         evt.preventDefault()
-        if (formInfo.name == "" && formInfo.weight == 0){
-            console.log("empty")
+        if (formInfo.name == "" && formInfo.weight == 0 || formInfo.weight == 0){
+            return
         } else{
-            console.log(formInfo)
+            const newPaddler: Paddler = {
+                id: 0,
+                name: '',
+                weight: 0,
+                adj_perg_500_sec: 0,
+                position: 'engine',
+                stroke: true,
+                pacer: true,
+                engine: true,
+                rocket: true,
+                drummer: true,
+                stern: true,
+                side_preference: 0,
+                roster: true
+            };
+
+            newPaddler.id = findLastId() + 1
             newPaddler.name = formInfo.name
-            newPaddler.weight = formInfo.weight
+            newPaddler.weight = Number(formInfo.weight)
             newPaddler.row = rowNum
-            newPaddler.boat_pos = position
+            newPaddler.boat_pos = leftRightPosition
             addPaddlerToRoster(newPaddler)
+            setSelectedPaddler(newPaddler)
         }
         closeModal()
     }
     return (
         <>
-            {modalState && selectedPosition.row == rowNum && selectedPosition.boat_pos == position &&
+            { modalState && selectedPosition.row == rowNum && selectedPosition.boat_pos == leftRightPosition &&
             <div 
-                className="fixed z-50 top-0 left-0 backdrop-blur-lg  display:none w-screen h-screen"
+                className="fixed z-50 top-0 left-0 backdrop-blur-lg  display:none w-screen h-screen hover:cursor-default"
                 >
-                <div className="w-[320px] h-[220px] z-60 bg-violet-500/90 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl backdrop-filter backdrop-blur-2xl opacity-95 rounded-xl ">
+                <div className="w-[320px] h-[275px] z-60 bg-[#113758]/90 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl backdrop-filter backdrop-blur-2xl opacity-95 rounded-xl hover:cursor-default">
                     <div className="flex flex-row justify-end">
                         <button 
-                            className="mt-2 mr-2 border-2 border-white rounded-md self-end"
+                            className="mt-2 mr-2 self-end"
                             onClick={closeModal}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-white">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -92,6 +114,11 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, position, selectedPosition
                             placeholder='name'
                             type="text"
                             ></input>
+                        <div
+                            className="text-red-300 text-sm h-[20px] hover:cursor-default"
+                            >
+                            {error ? "choose a different name" : " "}
+                        </div>
                         <label
                             className="text-md text-white"
                             htmlFor="weight">
@@ -105,13 +132,19 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, position, selectedPosition
                             placeholder='lbs'
                             type="number"
                             ></input>
+                        <div
+                            className="text-red-300 text-sm h-[20px] hover:cursor-default"
+                            >
+                            {weightError ? "enter a valid weight" : " "}
+                        </div>
                         <button
-                            className=" border-white border-2 px-4 rounded-md self-end hover:bg-violet-400/50"
-                            type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-white ">
+                            className=" border-white border-2 px-10 rounded-md self-end hover:bg-violet-400/50 disabled:hover:bg-[#113758]/0  disabled:border-slate-500"
+                            type="submit"
+                            disabled={error || formInfo.name == '' || weightError || formInfo.weight == 0 }>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className={`w-6 h-6 ${error || weightError || formInfo.weight == 0 || formInfo.name == ''? "text-slate-500": "text-white"}`}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                 </svg>
-                            </button>
+                        </button>
                     </form>
                 </div>
             </div>

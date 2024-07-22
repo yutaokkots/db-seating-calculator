@@ -14,6 +14,7 @@ import { create } from 'zustand'
 */
 
 export interface Paddler {
+    id: number;
     name: string;    
     weight: number;    
     adj_perg_500_sec: number;    
@@ -27,15 +28,35 @@ export interface Paddler {
     side_preference: number;
     roster: boolean;
     row?:number;
-    boat_pos?: string;
+    boat_pos?: number; // -1: none, 1: left, 2: right
+}
+
+export interface ChangePaddlerStatus {
+    (
+        paddlerName: string,
+        newRow?: number, 
+        newBoatPos?: number
+    ): void;
 }
 
 export interface paddlerDataStore {
+    // stores the initial data upon loading.
     paddlersState: Paddler[];
-    activeRosterState: Paddler[]
+    // stores the paddlers that are active in the roster.
+    activeRosterState: Paddler[]; 
+    // toggles between -1 and 1, indicates when a single dropdown/item should be cleared.
+    clearStateToggle: number;
+    // toggles between -1 and 1, indicates when a all dropdowns/items should be cleared.
+    clearAllToggle: number;
+    // sets 'paddlersState' 
     setPaddlersState: (paddlerData: Paddler[]) => void;
+    // sets 'activeRosterState' 
     setRosterState: (updateFnOrData: Paddler[] | ((prevState: Paddler[]) => Paddler[])) => void;
     addPaddlerToRoster: (newPaddler: Paddler) => void;
+    resetSeat: (paddlerName: string, newRow?: number, newBoatPos?: string) => void;
+    changePaddlerStatus: (paddlerName: string, newRow?:number,newBoatPos?:number) => void;
+    toggleClear: (choice: number) => void;
+    sortActiveRosterState: () => void;
 }
 
 export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
@@ -55,11 +76,163 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
         }))
     },
     addPaddlerToRoster: (newPaddler) => {
-        set((state) => ({
-            activeRosterState: [...state.activeRosterState, newPaddler]
-        }))
-    }
+        set((state) => {
 
+            const newPaddlerRow = newPaddler.row
+            const newPaddlerBoatPos = newPaddler.boat_pos
+            
+            const updatedRoster = state.activeRosterState
+            .map(paddler => 
+                (paddler.row === newPaddlerRow && paddler.boat_pos === newPaddlerBoatPos)
+                ? { ...paddler, row: -1, boat_pos: -1 }
+                : paddler
+            )
+            .concat(newPaddler);  // Add the new paddler
+            const rowPriority = [15, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, -1];      
+            updatedRoster.sort((a, b) => {        
+                if (a.row && b.row) {          
+                    const aRowIndex = rowPriority.indexOf(a.row);          
+                    const bRowIndex = rowPriority.indexOf(b.row);          
+                    if (aRowIndex !== bRowIndex) {            
+                        return aRowIndex - bRowIndex;          
+                    }          
+                        if (a.row === b.row) {            
+                            if (a.boat_pos === 1 && b.boat_pos !== 1) {              
+                                return -1;            
+                            } else if (a.boat_pos !== 1 && b.boat_pos === 1) {              
+                                return 1;            
+                            } else if (a.boat_pos === 2 && b.boat_pos !== 2) {              
+                                return -1;            
+                            } else if (a.boat_pos !== 2 && b.boat_pos === 2) {              
+                                return 1;            
+                            }          
+                        }        
+                    }        
+                    return a.name.localeCompare(b.name);     
+                });      
+            return {activeRosterState: updatedRoster}
+        })
+    },
+    resetSeat: (paddlerName, newRow=-1, newBoatPos="") => {
+        set((state) => {
+            const updatedRoster = state.activeRosterState
+                .map(paddler => 
+                    paddler.name === paddlerName 
+                        ?
+                        {...paddler, row: -1, boat_pos: -1}
+                        : 
+                        paddler
+                )
+                .map(paddler => 
+                    paddler.row == newRow 
+                        && (paddler.boat_pos == 1 && newBoatPos == "left" || paddler.boat_pos == 2 && newBoatPos == "right")
+                    ? 
+                    {...paddler, row: -1, boat_pos: -1}
+                    :
+                    paddler
+                )
+            const rowPriority = [15, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, -1];      
+            updatedRoster.sort((a, b) => {        
+                if (a.row && b.row) {          
+                    const aRowIndex = rowPriority.indexOf(a.row);          
+                    const bRowIndex = rowPriority.indexOf(b.row);          
+                    if (aRowIndex !== bRowIndex) {            
+                        return aRowIndex - bRowIndex;          
+                    }          
+                        if (a.row === b.row) {            
+                            if (a.boat_pos === 1 && b.boat_pos !== 1) {              
+                                return -1;            
+                            } else if (a.boat_pos !== 1 && b.boat_pos === 1) {              
+                                return 1;            
+                            } else if (a.boat_pos === 2 && b.boat_pos !== 2) {              
+                                return -1;            
+                            } else if (a.boat_pos !== 2 && b.boat_pos === 2) {              
+                                return 1;            
+                            }          
+                        }        
+                    }        
+                    return a.name.localeCompare(b.name);      
+                });      
+            return {activeRosterState: updatedRoster}
+        })
+    },
+    changePaddlerStatus: (paddlerName, newRow=-1, newBoatPos=-1)  => {
+        set((state) => {
+            const updatedRoster = state.activeRosterState
+            .map(paddler => 
+                paddler.row === newRow && paddler.boat_pos === newBoatPos
+                ? {...paddler, row:-1, boat_pos: -1}
+                : paddler)
+            .map(paddler => 
+                paddler.name === paddlerName
+                    ? {...paddler, row:newRow, boat_pos: newBoatPos}
+                    : paddler
+                )
+            const rowPriority = [15, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, -1];      
+            updatedRoster.sort((a, b) => {        
+                if (a.row && b.row) {          
+                    const aRowIndex = rowPriority.indexOf(a.row);          
+                    const bRowIndex = rowPriority.indexOf(b.row);          
+                    if (aRowIndex !== bRowIndex) {            
+                        return aRowIndex - bRowIndex;          
+                    }          
+                        if (a.row === b.row) {            
+                            if (a.boat_pos === 1 && b.boat_pos !== 1) {              
+                                return -1;            
+                            } else if (a.boat_pos !== 1 && b.boat_pos === 1) {              
+                                return 1;            
+                            } else if (a.boat_pos === 2 && b.boat_pos !== 2) {              
+                                return -1;            
+                            } else if (a.boat_pos !== 2 && b.boat_pos === 2) {              
+                                return 1;            
+                            }          
+                        }        
+                    }        
+                    return a.name.localeCompare(b.name);     
+                });      
+            return {activeRosterState: updatedRoster}
+            }
+        )},
+    clearStateToggle: -1,
+    clearAllToggle: -1,
+    toggleClear: (choice) => {
+        set((state) => {
+            if (choice == 0){
+                return { clearStateToggle: -state.clearStateToggle } 
+            } else if (choice == 1){
+                return { clearAllToggle: -state.clearStateToggle }
+            }
+            return {}
+        })
+    },
+    sortActiveRosterState: () => {    
+        set((state) => {      
+            const rowPriority = [15, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, -1];      
+            const sortedRoster = [...state.activeRosterState].sort((a, b) => {        
+                if (a.row && b.row) {          
+                    const aRowIndex = rowPriority.indexOf(a.row);          
+                    const bRowIndex = rowPriority.indexOf(b.row);          
+                    if (aRowIndex !== bRowIndex) {            
+                        return aRowIndex - bRowIndex;          
+                    }          
+                        if (a.row === b.row) {            
+                            if (a.boat_pos === 1 && b.boat_pos !== 1) {              
+                                return -1;            
+                            } else if (a.boat_pos !== 1 && b.boat_pos === 1) {              
+                                return 1;            
+                            } else if (a.boat_pos === 2 && b.boat_pos !== 2) {              
+                                return -1;            
+                            } else if (a.boat_pos !== 2 && b.boat_pos === 2) {              
+                                return 1;            
+                            }          
+                        }        
+                    }        
+                    return a.name.localeCompare(b.name);       
+                }
+            );      
+            return { activeRosterState: sortedRoster };    
+        });  
+    }
 }))
 
 

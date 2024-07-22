@@ -4,17 +4,17 @@ import BoatInterface from '../components/BoatInterface'
 import { paddlerDataStore, usePaddlerDataStore, Paddler } from '../lib/store'
 import { loadData } from '../utilities/data-service'
 import Loading from '../components/Loading'
-import DropdownCustom from '../components/assets/DropdownCustom'
+import { WindowSize } from '../common/types'
 
 const App:React.FC = () => {
   // Dynamic window sizing for responsive UI.  
-  const [ windowSize, setWindowSize] = useState<{width: number; height: number;}>({
+  const [ windowSize, setWindowSize] = useState<WindowSize>({
     width: window.innerWidth,
     height : window.innerHeight
   })
 
   // Global store that holds list of Paddler objects. 
-  const { setPaddlersState, setRosterState, activeRosterState }:paddlerDataStore = usePaddlerDataStore()
+  const { setPaddlersState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
 
   // Selects/filters data to include only those where item.roster == true.
   const filterRoster = (data: Paddler[]): Paddler[] => {
@@ -22,7 +22,7 @@ const App:React.FC = () => {
         .filter((item) => item.roster == true)
         .map((item) => ({
           ...item,
-          boat_pos: "none",
+          boat_pos: 0,
           row: -1
         })
        )

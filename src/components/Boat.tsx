@@ -1,86 +1,23 @@
 import React from 'react'
-import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 import Row from './Row';
 import Seating from './Seating';
-
 
 export interface ChangePaddlerStatus {
     (
         paddlerName: string,
         newRow?: number, 
-        newBoatPos?: string
+        newBoatPos?: number // 0: none, 1: left, 2: right
     ): void;
 }
 
 const Boat:React.FC = () => {
-    const { setRosterState }:paddlerDataStore = usePaddlerDataStore()
-
     const rows = Array.from({ length: 10 }, (_, i) => i + 1 );
-
-    // resetSeat() clears the particular seat in the Roster in the global state.
-    const resetSeat: ChangePaddlerStatus = (
-        paddlerName,
-        newRow = -1,
-        newBoatPos = "none",
-    ) => {
-        setRosterState(prevSelection => 
-            prevSelection.map(paddler => 
-                paddler.name == paddlerName
-                    ? {...paddler, row: -1, boat_pos: "none"}
-                    : paddler
-            )
-        )
-        setRosterState(prevSelection => 
-            prevSelection.map(paddler => 
-                paddler.row == newRow && paddler.boat_pos == newBoatPos
-                    ? {...paddler, row: -1, boat_pos: "none"}
-                    : paddler
-            )
-        )
-    }
-
-    
-
-    // changePaddlerStatus() makes a change to the global state for the Roster.
-    const changePaddlerStatus: ChangePaddlerStatus = (
-            paddlerName,
-            newRow = -1,
-            newBoatPos = "none",
-        ) => {
-            setRosterState(prevSelection => {
-                // First, reset any paddler that was in the new position
-                const resetOldPosition = prevSelection.map(paddler => 
-                  (paddler.row === newRow && paddler.boat_pos === newBoatPos)
-                    ? {...paddler, row: -1, boat_pos: "none"}
-                    : paddler
-                );
-            
-                // Then, update the selected paddler's position
-                return resetOldPosition.map(paddler => 
-                  paddler.name === paddlerName
-                    ? {...paddler, row: newRow, boat_pos: newBoatPos}
-                    : (paddler.name === paddlerName && (newRow === -1 || newBoatPos === "none"))
-                      ? {...paddler, row: -1, boat_pos: "none"}
-                      : paddler
-                );
-              });
-            };
-            //     resetSeat(paddlerName, newRow, newBoatPos)
-
-        //     setRosterState(prevSelection => 
-        //         prevSelection.map(paddler => 
-        //             paddler.name == paddlerName 
-        //                 ? {...paddler, row: newRow, boat_pos: newBoatPos}
-        //                 : paddler
-        //         )
-        //     )
-        // }
     
     return (
         <>
             <div>
 
-                <div className="relative w-[300px] h-[70px]">
+                <div className="relative w-[350px] h-[70px]">
                     <div className=" absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-b-[70px] border-b-white rounded-t-[20px]">
                     </div>
                     <div className="absolute inset-x-0 bottom-0 flex justify-center  ">
@@ -89,27 +26,23 @@ const Boat:React.FC = () => {
                             <div>
                                 <Seating 
                                     rowNum={ 15 }
-                                    position={"drum"} 
-                                    changePaddlerStatus={ changePaddlerStatus } 
-                                    resetSeat={  resetSeat } />
+                                    position={"drum"} />
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="w-[300px] h-[400px] bg-white px-1">
+                <div className="w-[350px] h-[400px] bg-white px-1">
                     <div className="flex flex-col justify-between h-full">
                     {
                         rows.map((r, idx) => (
                             <Row 
                                 key={idx} 
-                                rowNum={r} 
-                                changePaddlerStatus={ changePaddlerStatus }
-                                resetSeat={  resetSeat }/>
+                                rowNum={r}  />
                         ))
                     }
                     </div>
                 </div>
-                <div className="relative w-[300px] h-[70px]">
+                <div className="relative w-[350px] h-[70px]">
                     <div className="absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-t-[70px] border-t-white ">
                     </div>
                     <div className="absolute inset-x-0 top-0 flex justify-center ">
@@ -117,9 +50,7 @@ const Boat:React.FC = () => {
                             <div>
                                 <Seating 
                                     rowNum={ 11 }
-                                    position={"stern"} 
-                                    changePaddlerStatus={ changePaddlerStatus } 
-                                    resetSeat={  resetSeat } />
+                                    position={"stern"} />
                             </div>
                             <div>stern</div>
                         </div>
