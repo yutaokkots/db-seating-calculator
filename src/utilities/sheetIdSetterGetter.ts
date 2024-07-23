@@ -1,5 +1,5 @@
 /**
- * Sets and gets the previously used sheetId from localstorage.
+ * Sets and gets the previously stored items from localstorage.
  * 
  */
 

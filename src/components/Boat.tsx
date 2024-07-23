@@ -22,7 +22,7 @@ const Boat:React.FC = () => {
                     </div>
                     <div className="absolute inset-x-0 bottom-0 flex justify-center  ">
                         <div className="flex flex-col w-[50%] mb-2">                       
-                            <div>drummer/coach</div>
+                            <div className="font-bold">Drummer/Coach</div>
                             <div>
                                 <Seating 
                                     rowNum={ 15 }
@@ -52,7 +52,7 @@ const Boat:React.FC = () => {
                                     rowNum={ 11 }
                                     position={"stern"} />
                             </div>
-                            <div>stern</div>
+                            <div className="font-bold">Stern</div>
                         </div>
                     </div>
                 </div>

@@ -12,7 +12,7 @@ const Roster:React.FC<BoatInterfaceProps> = ({windowSize}) => {
       
     return (
         <div className=" border-2 rounded-md border-gray-100 p-2  bg-slate-200 ">
-            <div>Roster</div>
+            <div className="font-bold pb-1">Roster</div>
             <div className="text-left bg-white p-1 rounded-md h-[500px] overflow-y-scroll ">
                 {   activeRosterState.length == 0 
                     ? 

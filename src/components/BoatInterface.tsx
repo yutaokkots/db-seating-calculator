@@ -69,37 +69,45 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                 || paddler.row == 11)
             .reduce((sum, paddler) => sum + paddler.weight, 0)
 
-        const leftStr = activeRosterState
+        const filteredLeftPaddlers = activeRosterState
             .filter((paddler) => 
                 paddler.row 
                 && paddler.row > 0
                 && paddler.row < 11
                 && paddler.boat_pos 
-                && paddler.boat_pos == 1)
-            .reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0);
+                && paddler.boat_pos == 1
+                && paddler.adj_perg_500_sec > 0);
 
-        const rightStr = activeRosterState
+        const leftStr = filteredLeftPaddlers.reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0) / filteredLeftPaddlers.length;
+
+        const filteredRightPaddlers = activeRosterState
             .filter((paddler) => 
                 paddler.row 
-                && paddler.row > 0 
+                && paddler.row > 0
                 && paddler.row < 11
                 && paddler.boat_pos 
-                && paddler.boat_pos == 2)
-            .reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0);
+                && paddler.boat_pos == 2
+                && paddler.adj_perg_500_sec > 0);
 
-        const frontStr = activeRosterState
+        const rightStr = filteredRightPaddlers.reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0) / filteredRightPaddlers.length;
+
+        const filteredFrontPaddlers = activeRosterState
             .filter((paddler) => 
                 paddler.row 
                 && paddler.row > 0 
-                && paddler.row < 6)
-            .reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0);
+                && paddler.row < 6
+                && paddler.adj_perg_500_sec > 0)
 
-        const backStr = activeRosterState
+        const frontStr = filteredFrontPaddlers.reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0) / filteredFrontPaddlers.length;
+
+        const filteredBackPaddlers = activeRosterState
             .filter((paddler) => 
                 paddler.row 
                 && paddler.row > 5 
-                && paddler.row < 11)
-            .reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0);
+                && paddler.row < 11
+                && paddler.adj_perg_500_sec > 0);
+
+        const backStr = filteredBackPaddlers.reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0) / filteredBackPaddlers.length;
 
         setLeftWeight(left)
         setRightWeight(right)
@@ -115,7 +123,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
 
     return (
         <>
-            <div className="flex flex-col border-2 pb-1 pt-1 border-[#113758] bg-[#113758] rounded-xl w-[370px] sm:w-[500px] md:w-[600px] justify-center">
+            <div className="shadow-xl flex flex-col pb-3 pt-1  bg-[#113758]/80 rounded-xl w-[370px] sm:w-[500px] md:w-[600px] justify-center">
                 <WeightAnalysis 
                     windowSize={windowSize}
                     leftWeight={leftWeight}

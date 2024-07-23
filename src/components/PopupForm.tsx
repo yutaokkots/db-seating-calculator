@@ -24,7 +24,6 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
     useEffect(() => {
         const isNameFound = activeRosterState.some(paddler => paddler.name.toLowerCase() === formInfo.name.toLowerCase());
         setError(isNameFound);
-        console.log(formInfo.name, isNameFound)
     }, [formInfo.name])
 
     useEffect(() => {
@@ -86,23 +85,23 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
         <>
             { modalState && selectedPosition.row == rowNum && selectedPosition.boat_pos == leftRightPosition &&
             <div 
-                className="fixed z-50 top-0 left-0 backdrop-blur-lg  display:none w-screen h-screen hover:cursor-default"
+                className="fixed z-50 top-0 left-0 backdrop-blur-sm  display:none w-screen h-screen hover:cursor-default"
                 >
-                <div className="w-[320px] h-[275px] z-60 bg-[#113758]/90 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl backdrop-filter backdrop-blur-2xl opacity-95 rounded-xl hover:cursor-default">
+                <div className="w-[320px] h-[260px] z-60 bg-white/90 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl backdrop-filter backdrop-blur-2xl opacity-95 rounded-xl hover:cursor-default">
                     <div className="flex flex-row justify-end">
                         <button 
                             className="mt-2 mr-2 self-end"
                             onClick={closeModal}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-black">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
                     <form
-                        className="flex flex-col pb-3 px-3 items-start gap-2"
+                        className="flex flex-col pb-3 px-3 items-start gap-1"
                         onSubmit={handleSubmit}>
                         <label
-                            className="text-md text-white"
+                            className="text-md text-black"
                             htmlFor="name">
                                 Name
                             </label>
@@ -110,7 +109,7 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
                             name="name"
                             value={formInfo.name}
                             onChange={handleChange}
-                            className="px-2 py-1 rounded-md"
+                            className="px-2 py-1 rounded-md border-2 w-[230px]"
                             placeholder='name'
                             type="text"
                             ></input>
@@ -120,7 +119,7 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
                             {error ? "choose a different name" : " "}
                         </div>
                         <label
-                            className="text-md text-white"
+                            className="text-md text-black"
                             htmlFor="weight">
                                 Weight
                         </label>
@@ -128,7 +127,7 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
                             name="weight"
                             value={formInfo.weight}
                             onChange={handleChange}
-                            className="px-2 py-1 rounded-md"
+                            className="px-2 py-1 rounded-md border-2 w-[230px]"
                             placeholder='lbs'
                             type="number"
                             ></input>
@@ -138,10 +137,10 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
                             {weightError ? "enter a valid weight" : " "}
                         </div>
                         <button
-                            className=" border-white border-2 px-10 rounded-md self-end hover:bg-violet-400/50 disabled:hover:bg-[#113758]/0  disabled:border-slate-500"
+                            className=" border-slate-500 border-2 px-10 rounded-md self-end hover:bg-slate-300/50 disabled:hover:bg-[#113758]/0  disabled:border-slate-200"
                             type="submit"
                             disabled={error || formInfo.name == '' || weightError || formInfo.weight == 0 }>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className={`w-6 h-6 ${error || weightError || formInfo.weight == 0 || formInfo.name == ''? "text-slate-500": "text-white"}`}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className={`w-6 h-6 ${error || weightError || formInfo.weight == 0 || formInfo.name == ''? "text-slate-200": "text-slate-500"}`}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                 </svg>
                         </button>

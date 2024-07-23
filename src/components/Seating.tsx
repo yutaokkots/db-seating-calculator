@@ -17,7 +17,7 @@ interface SeatingProps{
 const Seating:React.FC<SeatingProps> = ({ rowNum, position }) => {
     return (
         <>
-            <div className=" flex flex-row items-center">
+            <div className=" flex flex-row items-center ">
                 <DropdownCustom 
                     rowNum={ rowNum }
                     position={ position } 

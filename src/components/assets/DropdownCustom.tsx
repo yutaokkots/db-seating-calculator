@@ -78,7 +78,7 @@ const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, dropdownP
                     <button
                         value={paddlerInfo.id}
                         onClick={handleItemClick}
-                        className="w-[100%] border-b-2 border-gray-100  pl-2 flex flex-start border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white">
+                        className="w-[100%] border-b-2  pl-2 flex flex-start hover:cursor-pointer hover:bg-gray-500 hover:text-white">
                                 {paddlerInfo.name} ({paddlerInfo.weight})
                     </button>
                 </li>
@@ -96,6 +96,9 @@ interface DropdownProps {
     rowNum: number;
     position:string;    //  "drum", "stern", "left", "right"
 }
+
+const dropdownCustomCSS1 = "absolute top-0 left-0"
+const dropdownCustomCSS2 = "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl"
 
 const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     const { activeRosterState, resetSeat, toggleClear, clearAllToggle, changePaddlerStatus }:paddlerDataStore  = usePaddlerDataStore() 
@@ -156,6 +159,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
 
     const handleInputClick = () => {
         setShowMenu(!showMenu)
+        setSelectedPosition({...selectedPosition, row: rowNum, boat_pos: leftRightPosition })
     }
 
     const getDisplay = () => {
@@ -203,8 +207,9 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
 
     return (
         <>
-            <div className=" flex justify-center">
-                <div className="flex flex-row w-[150px] h-[25px] px-1 border-2 rounded-md items-center justify-between relative hover:cursor-pointer">
+            <div className=" flex justify-center w-[100%]">
+                <div 
+                    className={` ${showMenu && rowNum == selectedPosition.row? "bg-red-600":""} flex flex-row w-[100%] h-[25px] px-1 border-2 rounded-md items-center justify-between relative hover:cursor-pointer`}>
                     <SeatingDelete 
                         rowNum={rowNum}
                         position={position}
@@ -232,14 +237,17 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                         selectedPosition={ selectedPosition }
                         setSelectedPaddler={setSelectedPaddler}/>
                     { showMenu && (
-                            <div className="absolute top-0 left-0 bg-white z-20">
-                                <div>
-
+                        <div 
+                            className="fixed z-50 top-0 left-0 backdrop-blur-sm  display:none w-screen h-screen hover:cursor-default"
+                            >
+                            <div className={`${dropdownCustomCSS2} bg-white z-20  rounded-lg `} >
+                                <div className="bg-[#113758] rounded-tl-md rounded-tr-md text-white ">
+                                     {rowNum > 0 && rowNum < 11 ? `row ${rowNum}` : ""} {position}
                                 </div>
-                                <ul className="border-2 w-[150px] rounded-md">
+                                <ul className="border-2 w-[150px]">
                                     <li>
                                         <div
-                                            className={` border-b-2 border-gray-100  pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
+                                            className={` border-b-2  pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
                                                 { selectedPaddler.name }
                                         </div>
                                     </li>
@@ -247,7 +255,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                         <button
                                             value="add-paddler"
                                             onClick={openModal}
-                                            className={`border-b-2 border-gray-100 w-[100%] pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
+                                            className={`border-b-2 w-[100%] bg-purple-100 pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
                                                 - add paddler -
                                         </button>
                                     </li>
@@ -263,6 +271,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                 }
                                 </ul>
                             </div>
+                        </div>
                         )
                     }
                 </div>

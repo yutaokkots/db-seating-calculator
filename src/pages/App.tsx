@@ -5,6 +5,9 @@ import { paddlerDataStore, usePaddlerDataStore, Paddler } from '../lib/store'
 import { loadData } from '../utilities/data-service'
 import Loading from '../components/Loading'
 import { WindowSize } from '../common/types'
+import NavBar from '../components/NavBar/NavBar'
+import PopupAbout from '../components/NavBar/PopupAbout'
+import PopupInfo from '../components/NavBar/PopupInfo'
 
 const App:React.FC = () => {
   // Dynamic window sizing for responsive UI.  
@@ -12,6 +15,10 @@ const App:React.FC = () => {
     width: window.innerWidth,
     height : window.innerHeight
   })
+  
+  // helps to show the About and Info pages
+  const [ showAbout, setShowAbout ] = useState<boolean>(false)
+  const [ showInfo, setShowInfo ] = useState<boolean>(false)
 
   // Global store that holds list of Paddler objects. 
   const { setPaddlersState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
@@ -71,8 +78,18 @@ const App:React.FC = () => {
 
   return (
     <>
-      <div>
-        <div className="text-black text-2xl">
+      <NavBar 
+        setShowInfo={setShowInfo}
+        setShowAbout={setShowAbout}/>
+      <PopupAbout 
+        setShowAbout={setShowAbout}
+        showAbout={showAbout}/>
+      <PopupInfo 
+        setShowInfo={setShowInfo}
+        showInfo={showInfo}
+        />
+      <div className="pt-12">
+        <div className="text-black text-2xl font-bold">
           RPT Dragon Boat Seat Placement
         </div>
         <div className="flex justify-center">

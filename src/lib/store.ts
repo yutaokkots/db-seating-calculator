@@ -46,7 +46,7 @@ export interface paddlerDataStore {
     activeRosterState: Paddler[]; 
     // toggles between -1 and 1, indicates when a single dropdown/item should be cleared.
     clearStateToggle: number;
-    // toggles between -1 and 1, indicates when a all dropdowns/items should be cleared.
+    // toggles between -1 and 1, indicates when all dropdowns/items should be cleared.
     clearAllToggle: number;
     // sets 'paddlersState' 
     setPaddlersState: (paddlerData: Paddler[]) => void;
