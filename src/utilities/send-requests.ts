@@ -6,8 +6,17 @@ const timeout = (ms: number) =>
         setTimeout(() => 
             reject(new Error('Timeout')), ms))
 
-const sendRequest = async(method="GET", timeoutMs = 8000) => {
-    const options = { method };
+const sendRequest = async(method="GET", data = null, timeoutMs = 8000) => {
+    const options:RequestInit = { 
+        method,
+
+    };
+    if (data){
+        options.body = JSON.stringify(data)
+        options.headers={
+            'Content-Type': 'application/json'
+        } 
+    }
     const url = `${googleAppScript}`;
 
     const fetchPromise = fetch(url, options)

@@ -2,12 +2,12 @@ import React from 'react'
 import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 
 const Loading:React.FC = () => {
-    const { paddlersState }:paddlerDataStore = usePaddlerDataStore()
+    const { activeRosterState }:paddlerDataStore = usePaddlerDataStore()
 
     return (
         <>
         {
-            paddlersState.length == 0 ? 
+            activeRosterState.length == 0 ? 
             <div>Loading</div>
             :
             <div>Ready</div>

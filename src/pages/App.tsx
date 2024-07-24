@@ -96,14 +96,16 @@ const App:React.FC = () => {
         showInfo={showInfo}
         />
       <div className="pt-12">
-        <div className="text-black text-2xl font-bold">
-          RPT Dragon Boat Seat Placement
-        </div>
-        <div className="flex justify-center">
-          <Loading />
-        </div>
-        <div className="flex justify-center">
-          <BoatInterface windowSize={windowSize} />
+        <div className="bg-gradient-to-tl from-violet-200 to-white">
+          <div className="text-black text-2xl font-bold">
+            RPT Dragon Boat Seat Placement
+          </div>
+          <div className="flex justify-center">
+            <Loading />
+          </div>
+          <div className="flex justify-center">
+            <BoatInterface windowSize={windowSize} />
+          </div>
         </div>
       </div>
     </>

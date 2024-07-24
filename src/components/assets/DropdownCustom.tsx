@@ -113,7 +113,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
 
     // The row and boat-position information for the Dropdown Item. 
     const [ selectedPosition, setSelectedPosition ] = useState<SelectedPosition>({row: -1, boat_pos: -1})
-    const { setModalState }:ModalDataStore = useModalDataStore();
+    const { modalState, setModalState }:ModalDataStore = useModalDataStore();
 
     // Stores the position (drummer, pacer, etc) of the paddler in the boat.
     const [ dropdownPosition, setdropdownPosition ] = useState<string>("");
@@ -121,22 +121,32 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     const [ leftRightPosition, setLeftRightPosition ] = useState<number>(-1);
 
     useEffect(()=>{
+        let currRow = -1
         if (position == "drum"){
             setdropdownPosition("drummer")
+            currRow = 15
         } else if (position == "stern"){
             setdropdownPosition("stern")
+            currRow = 11
         } else if (position == "left"){
             setLeftRightPosition(1)
         } else if (position == "right"){
             setLeftRightPosition(2)
         }
+        if (rowNum > 0 && rowNum < 11){
+            currRow = rowNum
+        }
         if (rowNum > 0 && rowNum < 5){
             setdropdownPosition("pacer")
+            
         } else if (rowNum > 4 && rowNum < 8){
             setdropdownPosition("engine")
         } else if (rowNum > 7 && rowNum < 11){
             setdropdownPosition("rocket")
         }
+
+        setSelectedPaddler(filterPaddlers(currRow, leftRightPosition))
+
     },[activeRosterState])
 
     useEffect(() => {
@@ -157,7 +167,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         }
     }, [])
 
-    useEffect(() => {
+    useEffect(() => {   
         setSelectedPaddler(defaultPaddler)
     },[clearAllToggle])
 
@@ -166,18 +176,22 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         setSelectedPosition({row: rowNum, boat_pos: leftRightPosition })
     }
 
-    // const getDisplay = () => {
-    //     if (!selectedPaddler) {
-    //         return placeHolder
-    //     }
-    //     return selectedPaddler.name
-    // };
-    // const isSelected = (option) => {
-    //     if (!selectedPaddler) {
-    //         return placeHolder;
-    //     }
-    //     return selectedPaddler.value === option.value;
-    // };
+    const filterPaddlers = (row?: number, boat_pos?: number): Paddler => {
+        const paddlerByRow:Paddler[] = activeRosterState.filter(paddler => paddler.row == row)
+
+        if (row == 11 || row == 15) {
+            return paddlerByRow[0] || defaultPaddler
+        }
+        if (boat_pos && boat_pos > 0 && paddlerByRow.length > 0){
+            const paddlerBySide = paddlerByRow.find((paddler) => paddler.boat_pos == boat_pos)
+            if (paddlerBySide !== undefined){
+                return paddlerBySide
+            } else {
+                return defaultPaddler
+            }
+        }
+        return paddlerByRow[0] || defaultPaddler
+    };
 
 
     // onItemClick() function is prop-drilled; triggered when a dropdown item is selected.
@@ -223,7 +237,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         <>
             <div className=" flex justify-center w-[100%]">
                 <div 
-                    className={` ${showMenu && rowNum == selectedPosition.row? "bg-red-600":""} flex flex-row w-[100%] h-[25px] px-1 border-2 rounded-md items-center justify-between relative hover:cursor-pointer`}>
+                    className={` ${showMenu && rowNum == selectedPosition.row || modalState && rowNum == selectedPosition.row? "bg-red-600":""} flex flex-row w-[100%] h-[25px] px-1 border-2 rounded-md items-center justify-between relative hover:cursor-pointer`}>
                     <SeatingDelete 
                         rowNum={rowNum}
                         position={position}

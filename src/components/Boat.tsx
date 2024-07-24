@@ -1,5 +1,5 @@
 import React from 'react'
-import Row from './Row';
+
 import Seating from './Seating';
 
 export interface ChangePaddlerStatus {
@@ -10,13 +10,13 @@ export interface ChangePaddlerStatus {
     ): void;
 }
 
+
 const Boat:React.FC = () => {
     const rows = Array.from({ length: 10 }, (_, i) => i + 1 );
     
     return (
         <>
             <div>
-
                 <div className="relative w-[350px] h-[70px]">
                     <div className=" absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-b-[70px] border-b-white rounded-t-[20px]">
                     </div>
@@ -35,9 +35,23 @@ const Boat:React.FC = () => {
                     <div className="flex flex-col justify-between h-full">
                     {
                         rows.map((r, idx) => (
-                            <Row 
-                                key={idx} 
-                                rowNum={r}  />
+                            <div 
+                                className="grid grid-cols-11 "
+                                key={idx} >
+                                <div className="col-span-5">    
+                                    <Seating 
+                                        rowNum={ r }
+                                        position={"left"}/>
+                                </div>
+                                <div className="col-span-1">
+                                    {r}
+                                </div>
+                                <div className="col-span-5">
+                                    <Seating 
+                                        rowNum={ r }
+                                        position={"right"}/>
+                                </div>
+                            </div>
                         ))
                     }
                     </div>
