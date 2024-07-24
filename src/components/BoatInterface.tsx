@@ -4,6 +4,7 @@ import Boat from './Boat'
 import Roster from './Roster';
 import WeightAnalysis from './WeightAnalysis';
 import { WindowSize } from '../common/types';
+import ControlArea from './ControlArea/ControlArea';
 
 interface BoatInterfaceProps {
     windowSize: WindowSize;
@@ -137,6 +138,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                     backStrength={backStrength}
                     drumSternWeight={drumSternWeight}
                     />
+                <ControlArea />
                 <div className="flex  justify-evenly ">
                     <div className="w-[350px] sm:w-[350px] md:w-[350px] flex justify-evenly">
                         <Boat/>

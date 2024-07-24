@@ -1,9 +1,15 @@
 import React from 'react'
 
-const SaveState:React.FC = () => {
+
+interface SaveStateProps {
+    setShowSaver: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SaveState:React.FC<SaveStateProps> = ({ setShowSaver }) => {
     const handleClick = () => {
-        // save current activeRosterState
+        setShowSaver(true)
     }
+
     return (
         <>
             <button

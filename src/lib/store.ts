@@ -200,7 +200,7 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
             if (choice == 0){
                 return { clearStateToggle: -state.clearStateToggle } 
             } else if (choice == 1){
-                return { clearAllToggle: -state.clearStateToggle }
+                return { clearAllToggle: -state.clearAllToggle }
             }
             return {}
         })
@@ -237,10 +237,15 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
 
 
 /** 
-* States holding the modal information.
+* States holding the modal information for entering paddler information.
 * @state {} modalState - boolean for whether modal is open for entering paddler information.
 * @function setModalState - sets the modalState. 
 */
+
+export type SelectedPosition = {
+    row: number,
+    boat_pos: number
+}
 
 export interface ModalDataStore {
     modalState: boolean;

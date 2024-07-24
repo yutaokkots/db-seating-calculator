@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './App.css'
 import BoatInterface from '../components/BoatInterface'
 import { paddlerDataStore, usePaddlerDataStore, Paddler } from '../lib/store'
-import { loadData } from '../utilities/data-service'
+import loadData from '../utilities/data-service'
 import Loading from '../components/Loading'
 import { WindowSize } from '../common/types'
 import NavBar from '../components/NavBar/NavBar'
@@ -39,9 +39,16 @@ const App:React.FC = () => {
   const loadSSData = async() => {
     await loadData()
       .then((res) => {
-        // Loads paddlersState to load all information from external resource.
-        if (res){
+        // Retrieves 'paddlerState' from localStorage
+        const localData = localStorage.getItem('paddlerState');
+        // if 'paddlerState' does exist, then parses.
+        const parsedLocalData = localData ? JSON.parse(localData) : null;
+        // and compares localStorage data to information from the server.
+        // if they are not the same, then loads the server info, and 
+        // stores the server info into local storage.
+        if (JSON.stringify(parsedLocalData) !== JSON.stringify(res)){
           setPaddlersState(res)
+          localStorage.setItem('paddlerState', JSON.stringify(res))
         }
         return res
       })
@@ -80,7 +87,7 @@ const App:React.FC = () => {
     <>
       <NavBar 
         setShowInfo={setShowInfo}
-        setShowAbout={setShowAbout}/>
+        setShowAbout={setShowAbout} />
       <PopupAbout 
         setShowAbout={setShowAbout}
         showAbout={showAbout}/>

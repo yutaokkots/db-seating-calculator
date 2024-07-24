@@ -4,7 +4,7 @@ interface NavProps {
     setShowInfo: React.Dispatch<React.SetStateAction<boolean>>;
     setShowAbout: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const NavBar:React.FC<NavProps> = ({ setShowAbout, setShowInfo }) => {
+const NavBar:React.FC<NavProps> = ({ setShowAbout, setShowInfo}) => {
 
     return (
         <nav

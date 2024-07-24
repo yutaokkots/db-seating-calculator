@@ -12,9 +12,10 @@ interface PopupFormProps {
     leftRightPosition: number; 
     selectedPosition: SelectedPosition;
     setSelectedPaddler: React.Dispatch<React.SetStateAction<Paddler>>;
+    setSelectedPosition: React.Dispatch<React.SetStateAction<SelectedPosition>>;
 }
 
-const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selectedPosition, setSelectedPaddler }) => {
+const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selectedPosition, setSelectedPosition, setSelectedPaddler }) => {
     const [ formInfo, setFormInfo ] = useState<FormInfoType>({ name: "", weight: 0});
     const { modalState, setModalState }:ModalDataStore = useModalDataStore();
     const { addPaddlerToRoster, activeRosterState }: paddlerDataStore = usePaddlerDataStore();
@@ -35,6 +36,7 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
     const closeModal = () => {
         setModalState(false)
         setFormInfo({ name: "", weight: 0})
+        setSelectedPosition({row: -1, boat_pos: -1})
     }
 
     const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +45,10 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
             [name]: value}
         )
     }
+
+    const handleInternalClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+        event.stopPropagation();
+    };
 
     const findLastId = () => {
         return activeRosterState.reduce((maxId, paddler) => {
@@ -85,9 +91,11 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
         <>
             { modalState && selectedPosition.row == rowNum && selectedPosition.boat_pos == leftRightPosition &&
             <div 
-                className="fixed z-50 top-0 left-0 backdrop-blur-sm  display:none w-screen h-screen hover:cursor-default"
+                className="fixed z-50 top-0 left-0 backdrop-blur-sm display:none w-screen h-screen hover:cursor-default"
                 >
-                <div className="w-[320px] h-[260px] z-60 bg-white/90 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl backdrop-filter backdrop-blur-2xl opacity-95 rounded-xl hover:cursor-default">
+                <div 
+                    onClick={handleInternalClick}
+                    className="w-[320px] h-auto z-60 bg-white/90 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-sm shadow-xl rounded-xl hover:cursor-default">
                     <div className="flex flex-row justify-end">
                         <button 
                             className="mt-2 mr-2 self-end"
@@ -96,6 +104,12 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
                         </button>
+                    </div>
+                    <div className="font-bold">
+                        Add Paddler
+                        <div>Choose Paddler:</div> 
+                        <div>{selectedPosition.row > 0 && selectedPosition.row < 11 ? `row ${selectedPosition.row}` : ""} - {selectedPosition.boat_pos == 1 ? "left" : "right"}</div>
+                        
                     </div>
                     <form
                         className="flex flex-col pb-3 px-3 items-start gap-1"
@@ -140,9 +154,10 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
                             className=" border-slate-500 border-2 px-10 rounded-md self-end hover:bg-slate-300/50 disabled:hover:bg-[#113758]/0  disabled:border-slate-200"
                             type="submit"
                             disabled={error || formInfo.name == '' || weightError || formInfo.weight == 0 }>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className={`w-6 h-6 ${error || weightError || formInfo.weight == 0 || formInfo.name == ''? "text-slate-200": "text-slate-500"}`}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`w-6 h-6 ${error || weightError || formInfo.weight == 0 || formInfo.name == ''? "text-slate-200": "text-slate-500"}`}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                                 </svg>
+
                         </button>
                     </form>
                 </div>

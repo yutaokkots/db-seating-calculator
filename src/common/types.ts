@@ -27,5 +27,3 @@ export interface Paddler {
 }
 
 export type PaddlerKeys = keyof Paddler;
-
-

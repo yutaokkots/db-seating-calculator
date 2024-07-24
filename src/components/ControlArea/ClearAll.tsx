@@ -1,8 +1,8 @@
 import React from 'react'
-import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
+import { paddlerDataStore, usePaddlerDataStore } from '../../lib/store'
 
 const ClearAll:React.FC = () => {
-    const { activeRosterState, setRosterState, toggleClear }:paddlerDataStore = usePaddlerDataStore()
+    const { activeRosterState,  setRosterState, toggleClear }:paddlerDataStore = usePaddlerDataStore()
 
     const clearAllData = () => {
         const updatedRosterState = activeRosterState.map((paddler) => ({
@@ -14,13 +14,11 @@ const ClearAll:React.FC = () => {
     }
 
     const handleClick = () => {
-        clearAllData()
         // clears local states (dropdown, roster) related to paddlers
-        toggleClear(1)
         toggleClear(1)
         // clears global states related to paddlers
         toggleClear(0)
-        toggleClear(0)
+        clearAllData()
     }
 
     return (

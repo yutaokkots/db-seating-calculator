@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ChangePaddlerStatus } from './Boat';
 import { paddlerDataStore, usePaddlerDataStore, Paddler, useModalDataStore, ModalDataStore } from '../lib/store'
 import { SeatSelectionType } from './Seating';
-import PopupForm from './PopupForm';
+
 
 interface DropdownProps {
     rowNum: number;
@@ -95,10 +95,6 @@ const Dropdown:React.FC<DropdownProps> = ({ rowNum, position, changePaddlerStatu
 
     return (
         <>
-            <PopupForm 
-                rowNum={ rowNum }
-                position={ position } 
-                selectedPosition={ selectedPosition }/>
             <select
                 className="w-full p-1 rounded-md"
                 value={selected}

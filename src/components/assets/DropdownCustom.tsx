@@ -42,12 +42,15 @@ interface DropdownCustom {
 export type SeatSelectionType = (paddlerName: string, row?: number, pos?: string) => void;
 
 interface DropdownElementProps {
+    setSelectedPosition: React.Dispatch<React.SetStateAction<SelectedPosition>>;
     paddlerInfo: Paddler;
     dropdownPosition: string;
     onItemClick: (selectedPaddlerId: string) => void;
+    closeMenu: () => void;
+
 }
 
-const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, dropdownPosition, onItemClick }) => {
+const DropdownElement:React.FC<DropdownElementProps> = ({ setSelectedPosition, paddlerInfo, dropdownPosition, onItemClick, closeMenu }) => {
     const { activeRosterState  }:paddlerDataStore = usePaddlerDataStore()
     const [ showOption, setShowOption ] = useState<boolean>(true); 
 
@@ -63,10 +66,12 @@ const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, dropdownP
             setShowOption(false)
         }
     },[activeRosterState])
-
+    
     //onClick={() => onItemClick(paddlerInfo)} 
-
+    
     const handleItemClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
+        setSelectedPosition({row: -1, boat_pos: -1})
+        closeMenu()
         const selectedPaddlerId = evt.currentTarget.value;
         onItemClick(selectedPaddlerId);
     }
@@ -96,9 +101,6 @@ interface DropdownProps {
     rowNum: number;
     position:string;    //  "drum", "stern", "left", "right"
 }
-
-const dropdownCustomCSS1 = "absolute top-0 left-0"
-const dropdownCustomCSS2 = "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl"
 
 const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     const { activeRosterState, resetSeat, toggleClear, clearAllToggle, changePaddlerStatus }:paddlerDataStore  = usePaddlerDataStore() 
@@ -137,8 +139,6 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         }
     },[activeRosterState])
 
-    const placeHolder = "paddler"
-
     useEffect(() => {
         if (showMenu && searchRef.current){
             searchRef.current.focus();
@@ -157,22 +157,21 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         }
     }, [])
 
-    const handleInputClick = () => {
-        setShowMenu(!showMenu)
-        setSelectedPosition({...selectedPosition, row: rowNum, boat_pos: leftRightPosition })
-    }
-
-    const getDisplay = () => {
-        if (!selectedPaddler) {
-            return placeHolder
-        }
-        return selectedPaddler.name
-    };
-
     useEffect(() => {
         setSelectedPaddler(defaultPaddler)
     },[clearAllToggle])
 
+    const handleInputClick = () => {
+        setShowMenu(!showMenu)
+        setSelectedPosition({row: rowNum, boat_pos: leftRightPosition })
+    }
+
+    // const getDisplay = () => {
+    //     if (!selectedPaddler) {
+    //         return placeHolder
+    //     }
+    //     return selectedPaddler.name
+    // };
     // const isSelected = (option) => {
     //     if (!selectedPaddler) {
     //         return placeHolder;
@@ -180,8 +179,11 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     //     return selectedPaddler.value === option.value;
     // };
 
+
+    // onItemClick() function is prop-drilled; triggered when a dropdown item is selected.
     const onItemClick = (selectedPaddlerId: string) => {
         const selectedPaddler = activeRosterState.find((paddler) => paddler.id && paddler.id.toString() == selectedPaddlerId)
+
         if (selectedPaddler){   
             setSelectedPaddler(selectedPaddler);
             if (selectedPaddlerId == "add-paddler"){
@@ -194,16 +196,28 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     }
 
     const deleteSeatSelection: SeatSelectionType = (paddlerName, row, pos) => {
+        // changes/resets the activeRosterState's individual information.
         resetSeat(paddlerName, row, pos)
         // helps to clear the useState in "RosterItem"
         toggleClear(0)
+        // sets the current paddler back to default (empty information).
         setSelectedPaddler(defaultPaddler)
     }
 
     const openModal = () => {
+        closeMenu()
+        setSelectedPosition({row: rowNum, boat_pos: leftRightPosition })
         setModalState(true)
-        setSelectedPosition({...selectedPosition, row: rowNum, boat_pos: leftRightPosition })
+        console.log(rowNum, leftRightPosition)
     }
+
+    const closeMenu = () => {
+        setShowMenu(false)
+    }
+
+    const handleInternalClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+        event.stopPropagation();
+    };
 
     return (
         <>
@@ -221,8 +235,8 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                         className="dropdown-input w-[80%]">
                             <div className="flex flex-row justify-between">
                                 <div 
-                                    className={`dropdown-selected-value ${!selectedPaddler ? 'placeholder' : ''}`}
-                                    >{getDisplay()}
+                                    className="dropdown-selected-value">
+                                    {selectedPaddler.name}
                                 </div>
                                 <div className="dropdown-tools">
                                     <div className="dropdown-tool">
@@ -235,41 +249,59 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                         rowNum={ rowNum }
                         leftRightPosition={ leftRightPosition } 
                         selectedPosition={ selectedPosition }
+                        setSelectedPosition={setSelectedPosition}
                         setSelectedPaddler={setSelectedPaddler}/>
                     { showMenu && (
                         <div 
+                            
                             className="fixed z-50 top-0 left-0 backdrop-blur-sm  display:none w-screen h-screen hover:cursor-default"
                             >
-                            <div className={`${dropdownCustomCSS2} bg-white z-20  rounded-lg `} >
-                                <div className="bg-[#113758] rounded-tl-md rounded-tr-md text-white ">
-                                     {rowNum > 0 && rowNum < 11 ? `row ${rowNum}` : ""} {position}
+                            <div
+                                onClick={handleInternalClick }
+                                className={`p-2 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl bg-white z-20 w-[260px] rounded-lg h-auto max-h-[500px]`} >
+                                <div className="flex flex-row justify-end">
+                                    <button 
+                                        className=" self-end"
+                                        onClick={closeMenu}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-black">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
                                 </div>
-                                <ul className="border-2 w-[150px]">
-                                    <li>
-                                        <div
-                                            className={` border-b-2  pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
-                                                { selectedPaddler.name }
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <button
-                                            value="add-paddler"
-                                            onClick={openModal}
-                                            className={`border-b-2 w-[100%] bg-purple-100 pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
-                                                - add paddler -
-                                        </button>
-                                    </li>
-                                { activeRosterState && 
-                                    activeRosterState.map((paddlerInfo, idx) => (
-                                        <DropdownElement 
-                                            key={idx}
-                                            paddlerInfo={ paddlerInfo } 
-                                            dropdownPosition={ dropdownPosition }
-                                            onItemClick={onItemClick}
-                                            />
-                                    ))
-                                }
-                                </ul>
+                                <div className="font-bold h-[60px]">
+                                    <div>Choose Paddler:</div> 
+                                    <div>{rowNum > 0 && rowNum < 11 ? `row ${rowNum}` : ""} - {position}</div>
+                                </div>
+                                <div className="h-auto max-h-[400px] rounded-b-lg overflow-y-scroll p-1 pb-3">
+                                    <ul className="border-2 rounded-md">
+                                        <li>
+                                            <div
+                                                className={` border-b-2  pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
+                                                    { selectedPaddler.name }
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <button
+                                                value="add-paddler"
+                                                onClick={openModal}
+                                                className={`border-b-2 w-[100%] bg-purple-100 pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
+                                                    - add paddler -
+                                            </button>
+                                        </li>
+                                    { activeRosterState && 
+                                        activeRosterState.map((paddlerInfo, idx) => (
+                                            <DropdownElement 
+                                                key={idx}
+                                                paddlerInfo={ paddlerInfo } 
+                                                setSelectedPosition={setSelectedPosition}
+                                                closeMenu={closeMenu}
+                                                dropdownPosition={ dropdownPosition }
+                                                onItemClick={onItemClick}
+                                                />
+                                        ))
+                                    }
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         )
