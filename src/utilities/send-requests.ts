@@ -1,13 +1,35 @@
 //const baseUrl = "https://docs.google.com/spreadsheets/d/"
 const googleAppScript = import.meta.env.VITE_GOOGLE_APP_SCRIPT
 
-const sendRequest = async(method="GET") => {
-    const options = { method };
-    const url = `${googleAppScript}`;
-    const result = await fetch(url, options)
+const timeout = (ms: number) => 
+    new Promise((_, reject) => 
+        setTimeout(() => 
+            reject(new Error('Timeout')), ms))
 
-    if (result.ok) return result.json()
-    throw new Error('Bad Request')
+const sendRequest = async(method="GET", data = null, timeoutMs = 8000) => {
+    const options:RequestInit = { 
+        method,
+
+    };
+    if (data){
+        options.body = JSON.stringify(data)
+        options.headers={
+            'Content-Type': 'application/json'
+        } 
+    }
+    const url = `${googleAppScript}`;
+
+    const fetchPromise = fetch(url, options)
+        .then((result) => {
+            if (result.ok)
+                return result.json();
+            throw new Error('Bad Request')
+        })
+    return Promise.race([fetchPromise, timeout(timeoutMs)])
+    // const result = await fetch(url, options)
+
+    // if (result.ok) return result.json()
+    // throw new Error('Bad Request')
 }
 
 export default sendRequest;

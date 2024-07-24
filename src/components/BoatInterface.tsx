@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 import Boat from './Boat'
-import RosterItem from './RosterItem';
+import Roster from './Roster';
+import WeightAnalysis from './WeightAnalysis';
+import { WindowSize } from '../common/types';
+import ControlArea from './ControlArea/ControlArea';
 
 interface BoatInterfaceProps {
     windowSize: WindowSize;
-}
-
-export interface WindowSize{
-    width: number;
-    height: number;
 }
 
 const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
@@ -32,7 +30,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                 paddler.row 
                 && paddler.row > -1 
                 && paddler.boat_pos 
-                && paddler.boat_pos == "left")
+                && paddler.boat_pos == 1)
             .reduce((sum, paddler) => sum + paddler.weight, 0);
 
         const right = activeRosterState
@@ -40,7 +38,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                 paddler.row 
                 && paddler.row > -1 
                 && paddler.boat_pos 
-                && paddler.boat_pos == "right")
+                && paddler.boat_pos == 2)
             .reduce((sum, paddler) => sum + paddler.weight, 0);
 
         const front = activeRosterState
@@ -72,37 +70,45 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                 || paddler.row == 11)
             .reduce((sum, paddler) => sum + paddler.weight, 0)
 
-        const leftStr = activeRosterState
+        const filteredLeftPaddlers = activeRosterState
             .filter((paddler) => 
                 paddler.row 
                 && paddler.row > 0
                 && paddler.row < 11
                 && paddler.boat_pos 
-                && paddler.boat_pos == "left")
-            .reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0);
+                && paddler.boat_pos == 1
+                && paddler.adj_perg_500_sec > 0);
 
-        const rightStr = activeRosterState
+        const leftStr = filteredLeftPaddlers.reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0) / filteredLeftPaddlers.length;
+
+        const filteredRightPaddlers = activeRosterState
             .filter((paddler) => 
                 paddler.row 
-                && paddler.row > 0 
+                && paddler.row > 0
                 && paddler.row < 11
                 && paddler.boat_pos 
-                && paddler.boat_pos == "right")
-            .reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0);
+                && paddler.boat_pos == 2
+                && paddler.adj_perg_500_sec > 0);
 
-        const frontStr = activeRosterState
+        const rightStr = filteredRightPaddlers.reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0) / filteredRightPaddlers.length;
+
+        const filteredFrontPaddlers = activeRosterState
             .filter((paddler) => 
                 paddler.row 
                 && paddler.row > 0 
-                && paddler.row < 6)
-            .reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0);
+                && paddler.row < 6
+                && paddler.adj_perg_500_sec > 0)
 
-        const backStr = activeRosterState
+        const frontStr = filteredFrontPaddlers.reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0) / filteredFrontPaddlers.length;
+
+        const filteredBackPaddlers = activeRosterState
             .filter((paddler) => 
                 paddler.row 
                 && paddler.row > 5 
-                && paddler.row < 11)
-            .reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0);
+                && paddler.row < 11
+                && paddler.adj_perg_500_sec > 0);
+
+        const backStr = filteredBackPaddlers.reduce((sum, paddler) => sum + paddler.adj_perg_500_sec, 0) / filteredBackPaddlers.length;
 
         setLeftWeight(left)
         setRightWeight(right)
@@ -118,106 +124,29 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
 
     return (
         <>
-            <div className="flex flex-col border-2 pb-1 pt-1 border-[#113758] bg-[#113758] rounded-xl w-[370px] sm:w-[500px] md:w-[600px] justify-center">
-                <div className="m-2 flex justify-between items-center  border-2 bg-slate-50 rounded-lg p-2">
-                    <div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
-                            <div>
-                                {windowSize.width >= 640 ?  "Port/Left" : "L"} 
-                            </div>
-                            <div className="bg-white rounded-sm p-1">
-                                <div>
-                                    {leftWeight + (drumSternWeight / 2)} lbs
-                                </div>
-                                { leftStrength > 0 && 
-                                    <div>
-                                    {leftStrength} units
-                                </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
-                            <div>
-                                {windowSize.width >= 640 ?  "Front" : "F"} 
-                            </div>
-                            <div className="bg-white rounded-sm p-1">
-                                <div>
-                                    {frontWeight} lbs
-                                </div>
-                                { rightStrength > 0 && 
-                                    <div>
-                                        {frontStrength} units
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <div className="bg-blue-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
-                            <div>
-                                Total
-                            </div>
-                            <div className="bg-white rounded-sm p-1">
-                                <div>    
-                                    {totalWeight} lbs
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
-                            <div>
-                                {windowSize.width >= 640 ?  "Back" : "B"} 
-                            </div>
-                            <div className="bg-white rounded-sm p-1">
-                                <div>    
-                                    {backWeight} lbs
-                                </div>
-                                { backStrength > 0 && 
-                                    <div>
-                                        {backStrength} units
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px] ">
-                            <div>
-                                {windowSize.width >= 640 ?  "Starboard/Right" : "R"}
-                            </div>
-                            <div className="bg-white rounded-sm p-1">
-                                <div>
-                                    {rightWeight + (drumSternWeight / 2)} lbs
-                                </div>
-                                { rightStrength > 0 && 
-                                    <div>
-                                        {rightStrength} units
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex p-1 justify-evenly ">
-                    <div className="w-[300px] sm:w-[300px] md:w-[300px] flex justify-center">
+            <div className="shadow-xl flex flex-col pb-3 pt-1  bg-[#113758]/80 rounded-xl w-[370px] sm:w-[500px] md:w-[600px] justify-center">
+                <WeightAnalysis 
+                    windowSize={windowSize}
+                    leftWeight={leftWeight}
+                    rightWeight={rightWeight}
+                    frontWeight={frontWeight}
+                    backWeight={backWeight}
+                    totalWeight={totalWeight}
+                    leftStrength={leftStrength}
+                    rightStrength={rightStrength}
+                    frontStrength={frontStrength}
+                    backStrength={backStrength}
+                    drumSternWeight={drumSternWeight}
+                    />
+                <ControlArea />
+                <div className="flex  justify-evenly ">
+                    <div className="w-[350px] sm:w-[350px] md:w-[350px] flex justify-evenly">
                         <Boat/>
                     </div>
                     {windowSize.width >= 640 && 
-                        <div className="w-[95px] sm:w-[140px] md:w-[250px] border-2 rounded-md border-gray-100 p-2  bg-slate-200 ">
-                            <div>Roster</div>
-                            <div className="text-left bg-white p-1 rounded-md h-auto">
-                                { activeRosterState.length == 0 
-                                    ? 
-                                    (
-                                        <div></div>
-                                    )
-                                    :
-                                    ( 
-                                        activeRosterState.map((p, idx) => (
-                                            <RosterItem key={idx} paddler={p} windowSize={windowSize}/>  
-                                        ))
-                                    )
-                                }
-                            </div>
+                        <div className="w-[95px] sm:w-[120px] md:w-[200px] h-[540px] ">
+                            <Roster 
+                                windowSize={windowSize}/>
                         </div>
                     }
                 </div>
