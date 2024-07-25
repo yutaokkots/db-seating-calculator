@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 interface SaveStateProps {
     setShowSaver: React.Dispatch<React.SetStateAction<boolean>>;
 }

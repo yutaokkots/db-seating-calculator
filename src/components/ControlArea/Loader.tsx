@@ -30,7 +30,6 @@ const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
     const handleClickClose = () => {
         setShowLoader(false)
         setMinModal(false)
-
     }
 
     const handleClickMin = () => {
@@ -48,7 +47,7 @@ const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
                 onClick={handleClickClose}>
                 <div 
                     onClick={handleInternalClick}
-                    className={`rounded-lg p-2 text-black  ${minModal ?  " w-[200px] h-[50px] bg-[#113758]/50":"w-[300px] h-[300px] bg-[#113758]/90"} z-60  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl`}>
+                    className={`rounded-lg p-2 text-black  ${minModal ?  " w-[200px] h-[40px] bg-[#113758]/50":"w-[300px] h-[300px] bg-[#113758]/90"} z-60  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl`}>
                     <div className="flex flex-row justify-between">
                         <button
                             className=" self-end"
@@ -56,7 +55,6 @@ const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-white">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
                             </svg>
-
                         </button>
                         <button 
                             className=" self-end"
@@ -81,9 +79,10 @@ const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
 
                             {retrievedRostersState.map((dataItem, idx) => 
                                 <LoadDataItem
-                                key={idx}
-                                dataItem={dataItem}
-                                deleteRoster={deleteRoster}
+                                    key={idx}
+                                    dataItem={dataItem}
+                                    deleteRoster={deleteRoster}
+                                    setMinModal={setMinModal}
                                 />
                             )}
                             </div>

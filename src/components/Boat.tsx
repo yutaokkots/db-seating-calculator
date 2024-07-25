@@ -10,7 +10,6 @@ export interface ChangePaddlerStatus {
     ): void;
 }
 
-
 const Boat:React.FC = () => {
     const rows = Array.from({ length: 10 }, (_, i) => i + 1 );
     

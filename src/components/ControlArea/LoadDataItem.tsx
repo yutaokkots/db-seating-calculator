@@ -5,6 +5,7 @@ import { usePaddlerDataStore, paddlerDataStore } from '../../lib/store';
 interface LoadDataItemProps {
     dataItem: RosterKeyObject;
     deleteRoster: (dataItem: RosterKeyObject) => void;
+    setMinModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface DateData  {
@@ -15,15 +16,16 @@ interface DateData  {
     localMinutes: string;
 }
 
-const LoadDataItem:React.FC<LoadDataItemProps> = ({ dataItem, deleteRoster }) => {
+const LoadDataItem:React.FC<LoadDataItemProps> = ({ dataItem, deleteRoster, setMinModal }) => {
     const dateData:DateData = parseIDLocalTime(dataItem.rosterKey)
     const [ deleteConfirm, setDeleteConfirm ] = useState<boolean>(false);
     const { setRosterState }:paddlerDataStore = usePaddlerDataStore()
 
     const handleClickLoad = () => {
+        setMinModal(true)
         setRosterState(dataItem.data)
     }
-
+    
     const handleClickCancel = () => {
         setDeleteConfirm(false)
     }
