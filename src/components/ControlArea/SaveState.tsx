@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 
 interface SaveStateProps {
@@ -13,7 +13,7 @@ const SaveState:React.FC<SaveStateProps> = ({ setShowSaver }) => {
     return (
         <>
             <button
-                className="border-2 py-1 px-2 rounded-md"
+                className="border-2 py-1 px-2 rounded-md shadow-sm"
                 onClick={handleClick}>   
                 Save    
             </button>

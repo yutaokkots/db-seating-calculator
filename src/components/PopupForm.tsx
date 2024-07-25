@@ -106,8 +106,8 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
                         </button>
                     </div>
                     <div className="font-bold">
-                        <div>Choose Paddler:</div> 
-                        <div>{selectedPosition.row > 0 && selectedPosition.row < 11 ? `row ${selectedPosition.row}` : ""} - {selectedPosition.boat_pos == 1 ? "left" : "right"}</div>
+                        <div>Add Paddler:</div> 
+                        <div>{selectedPosition.row > 0 && selectedPosition.row < 11 ? `row ${selectedPosition.row}` : ""} - {selectedPosition.boat_pos == 1 ? "left" : selectedPosition.boat_pos == 2 ? "right" : ""}</div>
                         
                     </div>
                     <form
