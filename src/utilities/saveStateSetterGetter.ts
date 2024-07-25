@@ -18,7 +18,7 @@ export type RosterResult<T> =
         error: string } 
 
 
-export const currentRosterSetter = (fileName:string, rosterSnapshot:Paddler[]) => {
+export const currentRosterSetter = (fileName:string, rosterSnapshot:Paddler[], uniqueID:string = "") => {
     try {
         const rosterKeys = localStorage.getItem("rosterKeys");
         let rosterArray:RosterKeyObject[]
@@ -28,7 +28,12 @@ export const currentRosterSetter = (fileName:string, rosterSnapshot:Paddler[]) =
         } else {
             rosterArray = JSON.parse(rosterKeys)
         }
-        const uid = generateUID()
+        let uid:string;
+        if (uniqueID== ""){
+            uid = generateUID();
+        } else {
+            uid = generateUID();
+        }
         const newRoster = {
             rosterKey: uid,
             rosterName: fileName == "" ? "untitled" : fileName,
@@ -36,7 +41,6 @@ export const currentRosterSetter = (fileName:string, rosterSnapshot:Paddler[]) =
         }
         rosterArray.push(newRoster)
         localStorage.setItem("rosterKeys", JSON.stringify(rosterArray));
-        //localStorage.setItem(uid, JSON.stringify(rosterSnapshot))
     } catch (err) {
         const errorMessage = (err as Error).message
         return {

@@ -8,7 +8,7 @@ const NavBar:React.FC<NavProps> = ({ setShowAbout, setShowInfo}) => {
 
     return (
         <nav
-            className="flex justify-center py-1 shadow-xl w-full h-14 fixed top-0 left-0 backdrop-filter backdrop-blur-xl opacity-95 bg-pink-900/80">
+            className="flex justify-center py-1 shadow-2xl w-full h-14 fixed top-0 left-0 backdrop-filter backdrop-blur-xl opacity-95 bg-pink-900/80">
                 <div className="flex justify-center w-[300px]">
                     <ul
                         className="flex flex-row items-center w-[300px] justify-between">

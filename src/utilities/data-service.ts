@@ -9,9 +9,15 @@ const isError = (error: unknown): error is Error => {
     return error instanceof Error
 }
 
-const loadData = async() => {
+// const googleAppScript = import.meta.env.VITE_GOOGLE_APP_SCRIPT
+const googleAppScriptGetPost = import.meta.env.VITE_GOOGLE_APP_SCRIPT_GETPOST
+const mainData = import.meta.env.VITE_GOOGLE_APP_SCRIPT_SHEET1
+const shareData = import.meta.env.VITE_GOOGLE_APP_SCRIPT_SHEET2
+
+export const loadData = async() => {
+    const url = `${googleAppScriptGetPost}?sheetNumber=${mainData}`
     try{
-        return await sendRequest()
+        return await sendRequest(url)
     } catch(error){
         if (isError(error) && error.message === 'Timeout'){
             console.log('Fetching data from local storage')
@@ -28,4 +34,42 @@ const loadData = async() => {
     }
 }
 
-export default loadData
+type UploadDataType = {
+    rosterKey: string,
+    rosterName: string,
+    origin?:string,
+    data: string
+
+}
+
+const fetchIP = async() => {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const ipaddress = await response.json();
+        return ipaddress.ip
+      } catch (error) {
+        console.error('Error fetching the IP address:', error);
+      }
+}
+
+export const uploadRoster = async(data:UploadDataType) => {
+    const url = `${googleAppScriptGetPost}`
+    const origin = await fetchIP()
+    data.origin = origin
+    try {
+        return await sendRequest(url, "POST", data)
+    }catch(error){
+        console.log(error)
+        throw error
+    }
+}
+
+export const downloadRoster = async(rosterKey:string) => {
+    const url = `${googleAppScriptGetPost}?sheetNumber=${shareData}&rosterKey=${rosterKey}`
+    try {
+        return await sendRequest(url)
+    } catch(error){
+        console.log(error)
+        throw error
+    }
+}
