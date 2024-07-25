@@ -10,6 +10,7 @@ interface LoaderProps {
 const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
     const [retrievedRostersState, setRetrievedRosters] = useState<RosterKeyObject[]>([])
     const [updateList, setUpdateList] = useState<number>(-1);
+    const [minModal, setMinModal] = useState<boolean>(false);
 
     useEffect(() => {
         const retrievedRosters: RosterResult<RosterKeyObject> = retrieveSavedRosters()
@@ -28,6 +29,12 @@ const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
 
     const handleClickClose = () => {
         setShowLoader(false)
+        setMinModal(false)
+
+    }
+
+    const handleClickMin = () => {
+        setMinModal(!minModal)
     }
 
     const handleInternalClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
@@ -37,12 +44,20 @@ const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
     return (
         <>
             <div
-                className="fixed z-50 top-0 left-0 backdrop-blur-md display:none w-screen h-screen hover:cursor-default"
+                className="fixed z-50 top-0 left-0 display:none w-screen h-screen hover:cursor-default"
                 onClick={handleClickClose}>
                 <div 
                     onClick={handleInternalClick}
-                    className="rounded-lg p-2 text-black w-[320px] h-[500px] z-60 bg-[#113758]/100 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl">
-                    <div className="flex flex-row justify-end">
+                    className={`rounded-lg p-2 text-black  ${minModal ?  " w-[200px] h-[50px] bg-[#113758]/50":"w-[300px] h-[300px] bg-[#113758]/90"} z-60  fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-2xl`}>
+                    <div className="flex flex-row justify-between">
+                        <button
+                            className=" self-end"
+                            onClick={handleClickMin}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-white">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
+                            </svg>
+
+                        </button>
                         <button 
                             className=" self-end"
                             onClick={handleClickClose}>
@@ -51,11 +66,13 @@ const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
                             </svg>
                         </button>
                     </div>
+                    { !minModal &&
+                    <>
                     <div
                         className="text-white font-bold h-[30px]">
                         Load data</div>
                     <div
-                        className="p-1 bg-white rounded-md h-[430px] overflow-y-scroll">
+                        className="p-1 bg-white rounded-md h-[230px] overflow-y-scroll">
                         {retrievedRostersState.length == 0
                             ?
                             <div className="text-center text-gray-300 m-2 italic">Nothing here</div>
@@ -71,7 +88,9 @@ const Loader:React.FC<LoaderProps> = ({setShowLoader}) => {
                             )}
                             </div>
                         }
-                    </div>
+                        </div>
+                        </>
+                    }
                 </div>
             </div>
         </>
