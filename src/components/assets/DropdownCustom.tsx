@@ -83,8 +83,16 @@ const DropdownElement:React.FC<DropdownElementProps> = ({ setSelectedPosition, p
                     <button
                         value={paddlerInfo.id}
                         onClick={handleItemClick}
-                        className="w-[100%] border-b-2  pl-2 flex flex-start hover:cursor-pointer hover:bg-gray-500 hover:text-white">
-                                {paddlerInfo.name} ({paddlerInfo.weight})
+                        className="w-[100%] border-b-2  pl-2  hover:cursor-pointer hover:bg-gray-500 hover:text-white">
+                                <div className="flex flex-row justify-between">
+                                    <div className="w-[50%] text-left">{paddlerInfo.name}</div> 
+                                    <div className="w-[50%] flex flex-row justify-between">
+                                        <div className="text-left">{paddlerInfo.weight} lb</div>
+                                        {paddlerInfo.adj_perg_500_sec && 
+                                        <div className="italic">{paddlerInfo.adj_perg_500_sec} s</div>
+                                        }
+                                    </div>
+                                </div>
                     </button>
                 </li>
             }
@@ -112,7 +120,8 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
     // The row and boat-position information for the Dropdown Item. 
-    const [ selectedPosition, setSelectedPosition ] = useState<SelectedPosition>({row: -1, boat_pos: -1})
+    const [ selectedPosition, setSelectedPosition ] = useState<SelectedPosition>({row: -1,
+         boat_pos: -1})
     const { modalState, setModalState }:ModalDataStore = useModalDataStore();
 
     // Stores the position (drummer, pacer, etc) of the paddler in the boat.
@@ -247,17 +256,25 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                         ref={inputRef} 
                         onClick={handleInputClick} 
                         className="dropdown-input w-[80%]">
-                            <div className="flex flex-row justify-between">
-                                <div 
-                                    className="dropdown-selected-value">
-                                    {selectedPaddler.name}
-                                </div>
-                                <div className="dropdown-tools">
-                                    <div className="dropdown-tool">
-                                        <Icon isOpen={showMenu} />
+                        <div className="flex flex-row justify-between">
+                            <div className="w-[100%] flex flex-row justify-between text-sm overflow-x-hidden">
+                                {selectedPaddler.name &&
+                                    <div className="font-bold">
+                                        {selectedPaddler.name}
                                     </div>
+                                }
+                                { selectedPaddler.weight > 0 && 
+                                    <div className="">
+                                        {selectedPaddler.weight}
+                                    </div>
+                                }   
+                            </div>
+                            <div className="dropdown-tools">
+                                <div className="dropdown-tool">
+                                    <Icon isOpen={showMenu} />
                                 </div>
                             </div>
+                        </div>
                     </div>
                     <PopupForm 
                         rowNum={ rowNum }

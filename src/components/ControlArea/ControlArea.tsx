@@ -14,18 +14,18 @@ const ControlArea:React.FC = () => {
         <div
             className=' p-2 mx-2"'>
             <div className="rounded-lg bg-slate-50 gap-2 p-2 flex justify-center">
-                <div className="w-[270px] sm:w-[300px] flex flex-row justify-between">
+                <div className="w-[330px] sm:w-[350px] flex flex-row justify-between">
                     <div>
                         <LoadState 
                             setShowLoader={setShowLoader}/>
                     </div>
-                    <div className=" flex flex-row justify-center">
+                    <div className=" flex flex-row justify-center gap-2">
+                        <div>
+                            <ClearAll />
+                        </div>
                         <div>
                             <SaveState 
                             setShowSaver={setShowSaver}/>
-                        </div>
-                        <div>
-                            <ClearAll />
                         </div>
                     </div>
                 </div>

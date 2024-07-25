@@ -40,10 +40,10 @@ const LoadDataItem:React.FC<LoadDataItemProps> = ({ dataItem, deleteRoster }) =>
         <>
             <div className="flex flex-row items-center justify-between gap-1 mb-1">
                 <div className="flex flex-row justify-start gap-1">
-                    <div className="rounded-md border-2 border-blue-500 mr-1 h-7 w-7 flex justify-center items-center">
+                    <div className="rounded-md mr-1 flex justify-center items-center">
                         <button
                             onClick={handleClickLoad}
-                            className="flex justify-center items-center p-1 h-7 w-7">
+                            className="flex justify-center items-center  h-7 w-7">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="text-blue-500 size-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
                             </svg>
@@ -79,9 +79,7 @@ const LoadDataItem:React.FC<LoadDataItemProps> = ({ dataItem, deleteRoster }) =>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 text-yellow-600">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
-
                         </button>
-
                     }
                 </div>
             </div>

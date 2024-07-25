@@ -124,7 +124,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
 
     return (
         <>
-            <div className="shadow-xl flex flex-col pb-3 pt-1  bg-[#113758]/80 rounded-xl w-[370px] sm:w-[500px] md:w-[600px] justify-center">
+            <div className="shadow-xl flex flex-col pb-4 mb-3  bg-[#113758]/80 rounded-xl w-[370px] sm:w-[500px] md:w-[600px] justify-center">
                 <WeightAnalysis 
                     windowSize={windowSize}
                     leftWeight={leftWeight}
