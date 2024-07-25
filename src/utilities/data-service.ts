@@ -10,9 +10,9 @@ const isError = (error: unknown): error is Error => {
 }
 
 // const googleAppScript = import.meta.env.VITE_GOOGLE_APP_SCRIPT
-const googleAppScriptGetPost = import.meta.env.VITE_GOOGLE_APP_SCRIPT_GETPOST
-const mainData = import.meta.env.VITE_GOOGLE_APP_SCRIPT_SHEET1
-const shareData = import.meta.env.VITE_GOOGLE_APP_SCRIPT_SHEET2
+const googleAppScriptGetPost:string = import.meta.env.VITE_GOOGLE_APP_SCRIPT_GETPOST
+const mainData:string = import.meta.env.VITE_GOOGLE_APP_SCRIPT_SHEET1
+const shareData:string = import.meta.env.VITE_GOOGLE_APP_SCRIPT_SHEET2
 
 export const loadData = async() => {
     const url = `${googleAppScriptGetPost}?sheetNumber=${mainData}`
