@@ -13,7 +13,6 @@ const SaverModal:React.FC<SaverModalProps> = ({ setShowSaver }) => {
     const [ formInfo, setFormInfo ] = useState<FormInfoType>({ name: ""});
     const { activeRosterState }:paddlerDataStore = usePaddlerDataStore()
 
-
     // closes modal
     const closeModal = () => {
         setShowSaver(false)
