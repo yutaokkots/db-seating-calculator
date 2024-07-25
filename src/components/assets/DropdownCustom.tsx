@@ -83,16 +83,16 @@ const DropdownElement:React.FC<DropdownElementProps> = ({ setSelectedPosition, p
                     <button
                         value={paddlerInfo.id}
                         onClick={handleItemClick}
-                        className="w-[100%] border-b-2  pl-2  hover:cursor-pointer hover:bg-gray-500 hover:text-white">
-                                <div className="flex flex-row justify-between">
-                                    <div className="w-[50%] text-left">{paddlerInfo.name}</div> 
-                                    <div className="w-[50%] flex flex-row justify-between">
-                                        <div className="text-left">{paddlerInfo.weight} lb</div>
-                                        {paddlerInfo.adj_perg_500_sec && 
-                                        <div className="italic">{paddlerInfo.adj_perg_500_sec} s</div>
-                                        }
-                                    </div>
-                                </div>
+                        className="w-[100%] border-b-2  px-1  hover:cursor-pointer hover:bg-gray-500 hover:text-white">
+                        <div className="flex flex-row justify-between">
+                            <div className="w-[50%] text-left">{paddlerInfo.name}</div> 
+                            <div className="w-[50%] flex flex-row justify-between">
+                                <div className="text-left">{paddlerInfo.weight} lb</div>
+                                {paddlerInfo.adj_perg_500_sec && 
+                                <div className="italic">{paddlerInfo.adj_perg_500_sec} s</div>
+                                }
+                            </div>
+                        </div>
                     </button>
                 </li>
             }
@@ -244,7 +244,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
 
     return (
         <>
-            <div className=" flex justify-center w-[100%]">
+            <div className=" flex justify-center  w-[100%]">
                 <div 
                     className={` ${showMenu && rowNum == selectedPosition.row || modalState && rowNum == selectedPosition.row? "bg-red-600":""} flex flex-row w-[100%] h-[25px] px-1 border-2 rounded-md items-center justify-between relative hover:cursor-pointer`}>
                     <SeatingDelete 
@@ -255,7 +255,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                     <div 
                         ref={inputRef} 
                         onClick={handleInputClick} 
-                        className="dropdown-input w-[80%]">
+                        className="dropdown-input w-[80%] ">
                         <div className="flex flex-row justify-between">
                             <div className="w-[100%] flex flex-row justify-between text-sm overflow-x-hidden">
                                 {selectedPaddler.name &&
@@ -284,7 +284,6 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                         setSelectedPaddler={setSelectedPaddler}/>
                     { showMenu && (
                         <div 
-                            
                             className="fixed z-50 top-0 left-0 backdrop-blur-sm  display:none w-screen h-screen hover:cursor-default"
                             >
                             <div

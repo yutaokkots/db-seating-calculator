@@ -30,10 +30,11 @@ const LoadDataItem:React.FC<LoadDataItemProps> = ({ dataItem, deleteRoster }) =>
 
     const handleClickDelete = () => {
         if (deleteConfirm){
-            setDeleteConfirm(false)
             deleteRoster(dataItem)
+            setDeleteConfirm(false)
+        } else {
+            setDeleteConfirm(true)
         }
-        setDeleteConfirm(true)
     }
 
     return (
@@ -59,7 +60,7 @@ const LoadDataItem:React.FC<LoadDataItemProps> = ({ dataItem, deleteRoster }) =>
                         </div>
                     </div>
 
-                    <div className="text-left text-sm w-[120px]">
+                    <div className="text-left text-sm w-[100px] text-wrap">
                         {dataItem.rosterName}
                     </div>
                 </div>
