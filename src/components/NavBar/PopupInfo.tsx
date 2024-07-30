@@ -31,8 +31,8 @@ const PopupInfo:React.FC<PopupInfoProps> = ({ setShowInfo, showInfo }) => {
                             <p className="text-left">The app currently displays total weight information on left/right/front/back portions of the boat. </p>
                             <p className="text-left">It also includes <i>average</i> 500m pERG times (sec). Lower 'sec' is faster. Paddlers with no pERG information are not included in the average calculation.</p>
                             <p className="text-left">The app currently features saving data, which can be shared and loaded using a code. </p>
-                            <p className="text-left font-medium">No guarantees are made with the use of the software, and sensitive information should not be shared. Please let the author know of any bugs and suggestions. </p>
-                            <p className="text-left"> Please let the author know of any bugs and suggestions. </p>
+                            <p className="text-left font-medium">No guarantees are made with the use of the software, and sensitive information should not be shared. </p>
+                            <p className="text-left"> Please inform the author of any bugs and suggestions. </p>
                         </div>
                     </div>
                 </div>

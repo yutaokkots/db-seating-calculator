@@ -259,3 +259,20 @@ export const useModalDataStore = create<ModalDataStore>((set) => ({
     }
 }))
 
+/** 
+* States holding the information for displaying or hiding sensitive paddler information.
+* @state {} showWeight - boolean for whether weight is displayed.
+* @function setShowWeight - sets the showWeight state. 
+*/
+
+export interface WeightStore {
+    showWeight: boolean;
+    setShowWeight: () => void;
+}
+
+export const useWeightStore = create<WeightStore>((set) => ({
+    showWeight: true,
+    setShowWeight: () => {
+        set(state => ({showWeight: !state.showWeight}))
+    }
+}))

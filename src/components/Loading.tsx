@@ -3,15 +3,21 @@ import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 
 const Loading:React.FC = () => {
     const { activeRosterState }:paddlerDataStore = usePaddlerDataStore()
-
+    // 
     return (
         <>
-        {
-            activeRosterState.length == 0 ? 
-            <div>Loading</div>
-            :
-            <div>Ready</div>
-        }
+            { activeRosterState.length == 0  ? 
+                <div 
+                    className="fixed z-50 top-0 left-0 bg-white w-screen h-screen hover:cursor-default"
+                    >
+                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <img src="/db-load-icon-white.gif" className="w-[100px] h-[100px]" alt="RPT Logo" />
+                        <div className="text-[#712d47]">Loading</div>
+                    </div>
+                </div>
+                :
+                <></>
+            }
         </>
     )
 }

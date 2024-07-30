@@ -95,7 +95,7 @@ const App:React.FC = () => {
         setShowInfo={setShowInfo}
         showInfo={showInfo}
         />
-      <div className="pt-14">
+      <div className="pt-14 ">
         <div className="bg-gradient-to-tl from-violet-200 to-white">
           <div className="text-black text-2xl font-bold">
             RPT Dragon Boat Seat Placement

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
-import { usePaddlerDataStore, paddlerDataStore, useModalDataStore, ModalDataStore } from '../../lib/store';
+import { usePaddlerDataStore, paddlerDataStore, useModalDataStore, ModalDataStore, useWeightStore, WeightStore  } from '../../lib/store';
 import SeatingDelete from '../SeatingDelete';
 import PopupForm from '../PopupForm';
 import { Paddler, PaddlerKeys } from '../../common/types';
@@ -111,9 +111,9 @@ interface DropdownProps {
 }
 
 const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
+    // load active roster state
     const { activeRosterState, resetSeat, toggleClear, clearAllToggle, changePaddlerStatus }:paddlerDataStore  = usePaddlerDataStore() 
     const [showMenu, setShowMenu] = useState<boolean>(false)
-    // 
     const [selectedPaddler, setSelectedPaddler] = useState<Paddler>(defaultPaddler)
     // stores string value in the search
     const searchRef = useRef<HTMLInputElement>(null)
@@ -123,6 +123,9 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     const [ selectedPosition, setSelectedPosition ] = useState<SelectedPosition>({row: -1,
          boat_pos: -1})
     const { modalState, setModalState }:ModalDataStore = useModalDataStore();
+
+    // Showing or hiding sensitive information
+    const { showWeight }:WeightStore = useWeightStore();
 
     // Stores the position (drummer, pacer, etc) of the paddler in the boat.
     const [ dropdownPosition, setdropdownPosition ] = useState<string>("");
@@ -263,7 +266,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                         {selectedPaddler.name}
                                     </div>
                                 }
-                                { selectedPaddler.weight > 0 && 
+                                { selectedPaddler.weight > 0 && showWeight &&
                                     <div className="">
                                         {selectedPaddler.weight}
                                     </div>
