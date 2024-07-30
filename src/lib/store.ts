@@ -268,11 +268,17 @@ export const useModalDataStore = create<ModalDataStore>((set) => ({
 export interface WeightStore {
     showWeight: boolean;
     setShowWeight: () => void;
+    paddlerNumber: number;
+    setPaddlerNumber: (num: number) => void;
 }
 
 export const useWeightStore = create<WeightStore>((set) => ({
     showWeight: true,
     setShowWeight: () => {
         set(state => ({showWeight: !state.showWeight}))
+    },
+    paddlerNumber: 0,
+    setPaddlerNumber: (num: number) => {
+        set({paddlerNumber: num})
     }
 }))

@@ -4,9 +4,13 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        "sans": ['Nunito', 'sans-serif']
+        sans: ['Nunito', 'sans-serif']
       },
       keyframes: {
+        'spin-counter':{
+          from: {transform: 'rotate(360deg)'},
+          to: {transform: 'rotate(0deg)'}
+        },
         refine: {
           "0%": {
             left: "0%",
@@ -18,6 +22,7 @@ export default {
       },
       animation: {
         "refine-slide": "refine 0.5s",
+        'spin-slow': 'spin-counter 8s linear infinite'
       },
     },
   },

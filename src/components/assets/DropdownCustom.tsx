@@ -53,6 +53,8 @@ interface DropdownElementProps {
 const DropdownElement:React.FC<DropdownElementProps> = ({ setSelectedPosition, paddlerInfo, dropdownPosition, onItemClick, closeMenu }) => {
     const { activeRosterState  }:paddlerDataStore = usePaddlerDataStore()
     const [ showOption, setShowOption ] = useState<boolean>(true); 
+    // Showing or hiding sensitive information
+    const { showWeight }:WeightStore = useWeightStore();
 
     useEffect(()=>{
         // 'dropdownPosition' is a state that holds information about this component's type of position.
@@ -87,7 +89,11 @@ const DropdownElement:React.FC<DropdownElementProps> = ({ setSelectedPosition, p
                         <div className="flex flex-row justify-between">
                             <div className="w-[50%] text-left">{paddlerInfo.name}</div> 
                             <div className="w-[50%] flex flex-row justify-between">
-                                <div className="text-left">{paddlerInfo.weight} lb</div>
+                                {showWeight ?
+                                    <div className="text-left">{paddlerInfo.weight} lb</div>
+                                    :
+                                    <div className="text-left"><span className="blur-sm">xxx</span> lb</div>
+                                }
                                 {paddlerInfo.adj_perg_500_sec && 
                                 <div className="italic">{paddlerInfo.adj_perg_500_sec} s</div>
                                 }
@@ -307,11 +313,44 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                 </div>
                                 <div className="h-auto max-h-[400px] rounded-b-lg overflow-y-scroll p-1 pb-3">
                                     <ul className="border-2 rounded-md">
-                                        <li>
+                                        <li >
                                             <div
-                                                className={` border-b-2  pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
-                                                    { selectedPaddler.name }
+                                                className={`flex flex-row justify-between border-b-2  pl-2 text-left border-md `} >
+                                                <div className="w-[50%] flex flex-row ">
+                                                    <div className="font-bold">
+                                                        { selectedPaddler.name } 
+                                                    </div>
+                                                </div>
+                                                <div className="w-[50%] flex flex-row justify-between">
+                                                    <div className="text-left">
+                                                        { selectedPaddler.weight && 
+                                                            showWeight
+                                                            ?
+                                                            <>
+                                                                {selectedPaddler.weight} lb
+                                                            </>
+                                                            :
+                                                            <></>
+                                                            }
+                                                    </div>      
+                                                    <div className="text-left italic">
+                                                        { selectedPaddler.adj_perg_500_sec 
+                                                            ?
+                                                            <>
+                                                                { selectedPaddler.adj_perg_500_sec} s
+                                                            </>
+                                                            :
+                                                            <></>
+                                                        }
+                                                    </div>
+                                                </div>
                                             </div>
+                                        </li>
+                                        <li>
+                                            <input
+                                                ref={searchRef} 
+                                                className="w-full">
+                                            </input>
                                         </li>
                                         <li>
                                             <button
