@@ -15,9 +15,24 @@ interface SeatingProps{
 }
 
 const Seating:React.FC<SeatingProps> = ({ rowNum, position }) => {
+    const handleOpenMenu = () => {
+    //
+    }
+    
+    
+    const handleKeyDown = (evt: React.KeyboardEvent<HTMLDivElement>) => {
+        if (evt.key === "Enter"){
+            console.log("open")
+            handleOpenMenu()
+        }
+    }
+
     return (
         <>
-            <div className=" flex flex-row items-center ">
+            <div
+                tabIndex={0} 
+                onKeyDown={handleKeyDown}
+                className=" flex flex-row items-center ">
                 <DropdownCustom 
                     rowNum={ rowNum }
                     position={ position } 

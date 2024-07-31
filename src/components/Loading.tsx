@@ -1,9 +1,13 @@
 import React from 'react'
 import { paddlerDataStore, usePaddlerDataStore } from '../lib/store'
 
+/** 
+ * Loading interface for when the app is initialized.
+ * Checks activeRosterState for data.
+*/
+
 const Loading:React.FC = () => {
     const { activeRosterState }:paddlerDataStore = usePaddlerDataStore()
-    // 
     return (
         <>
             { activeRosterState.length == 0 ? 

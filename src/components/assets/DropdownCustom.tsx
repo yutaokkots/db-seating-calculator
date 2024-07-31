@@ -53,13 +53,13 @@ interface DropdownElementProps {
 }
 
 const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, onItemClick, closeMenu, stylingClass }) => {
-    // The active roster
-    const {  boatState, setBoatState  }:paddlerDataStore = usePaddlerDataStore()
-    // Showing or hiding sensitive information
+    // The active roster, saved as a list of paddler.id, number[].
+    const { boatState }:paddlerDataStore = usePaddlerDataStore()
+    // Showing or hiding sensitive information, boolean.
     const { showWeight }:WeightStore = useWeightStore();
-    // Stores user-selected seat
+    // Stores user-selected seat {row:number, boat_pos: number}.
     const { setSelectedPosition }:SelectedPositionStore = useSelectedPositionStore();
-    // Shows or hides a dropdown element/item
+    // Shows or hides a dropdown element/item, boolean.
     const [ showOption, setShowOption ] = useState<boolean>(true); 
     
     useEffect(() => {
@@ -70,10 +70,12 @@ const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, onItemCli
     }, [boatState, paddlerInfo.id])
 
     const handleItemClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
-        setSelectedPosition(-1, -1)
         const selectedPaddlerId = evt.currentTarget.value;
-        setBoatState("add", Number(selectedPaddlerId))
+        // Resets the global 'selectedPosition' state that indicates the user's seat selection.
+        setSelectedPosition(-1, -1)
+        // 'onItemClick' is prop-drilled from parent component, and updates a number of states.
         onItemClick(selectedPaddlerId);
+        // Updates the 'boatState' global state 
         closeMenu()
     }
 
@@ -126,24 +128,20 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     const [selectedPaddler, setSelectedPaddler] = useState<Paddler>(defaultPaddler)
     // stores string value in the search
     const searchRef = useRef<HTMLInputElement>(null)
+
     const inputRef = useRef<HTMLInputElement>(null)
     // Search input, saves the input to help search in dropdown
     const [ searchInput, setSearchInput ] = useState<string>('');
     // Saves the state for keyboard presses
     const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-
-    // The row and boat-position information for the Dropdown Item. 
-    // const [ selectedPosition, setSelectedPosition ] = useState<SelectedPosition>({
-    //     row: -1,
-    //     boat_pos: -1})
+    // Stores which dropdown menu that the user has selected
     const { selectedPosition, setSelectedPosition }:SelectedPositionStore = useSelectedPositionStore();
+    // Showing or hiding the modal for the form for adding a paddler 'PopupForm.tsx'
     const { modalState, setModalState }:ModalDataStore = useModalDataStore();
 
     // Showing or hiding sensitive information
     const { showWeight }:WeightStore = useWeightStore();
 
-    // Stores the position (drummer, pacer, etc) of the paddler in the boat.
-    //const [ dropdownPosition, setdropdownPosition ] = useState<string>("");
     // Stores the 'left', 'right' information; -1:default, 1="left", 2="right"
     const [ leftRightPosition, setLeftRightPosition ] = useState<number>(-1);
 
@@ -172,8 +170,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
             currRow = rowNum
         }
         if (rowNum > 0 && rowNum < 5){
-            //setdropdownPosition("pacer")
-            
+            //setdropdownPosition("pacer")         
         } else if (rowNum > 4 && rowNum < 8){
             //setdropdownPosition("engine")
         } else if (rowNum > 7 && rowNum < 11){
@@ -199,11 +196,13 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
             window.removeEventListener("click", handler)
         }
     }, [])
-
+    
+    // useEffect that is triggered by the 'clearAllToggle; global state, resets the 'selectedPaddler' state back to default.
     useEffect(() => {   
         setSelectedPaddler(defaultPaddler)
     },[clearAllToggle])
 
+    // useEffect that allows selection of paddler with keystroke.
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (!showMenu) return;
@@ -211,24 +210,17 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
             if (event.key === 'ArrowDown') {
                 event.preventDefault();
                 setSelectedIndex(prevIndex => (prevIndex + 1) % filteredRoster.length);
-                console.log("down")
-                console.log(selectedIndex)
             } else if (event.key === 'ArrowUp') {
                 event.preventDefault();
                 setSelectedIndex(prevIndex => (prevIndex - 1 + filteredRoster.length) % filteredRoster.length);
-                console.log("up")
-                console.log(selectedIndex)
             } else if (event.key === 'Enter' && selectedIndex >= 0) {
                 event.preventDefault();
-                console.log("enter")
                 const selectedPaddlerId = filteredRoster[selectedIndex].id.toString();
                 onItemClick(selectedPaddlerId);
                 closeMenu();
             }
         };
-    
         document.addEventListener('keydown', handleKeyDown);
-    
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
@@ -260,43 +252,64 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         return paddlerByRow[0] || defaultPaddler
     };
 
-    // onItemClick() function is prop-drilled; triggered when a dropdown item is selected.
+    // onItemClick() function is prop-drilled to 'DropdownElement'.
+    // This function is triggered when a dropdown item is selected.
+    // If its parameter is 'add-paddler', then 'openAddPaddlerModal()' is triggered.
+    // Else searches for the paddler in the 'activeRosterState' using the paddler.id parameter.
+    // Once found, stores the paddler locally in 'selectedPaddler' state, and
+    // updates the 'activeRosterState' global state. 
     const onItemClick = (selectedPaddlerId: string) => {
-        const selectedPaddler = activeRosterState.find((paddler) => paddler.id && paddler.id.toString() == selectedPaddlerId)
-        if (selectedPaddler){   
-            setSelectedPaddler(selectedPaddler);
-            if (selectedPaddlerId == "add-paddler"){
-                openModal()
-            } else{
+        if (selectedPaddlerId == "add-paddler"){
+            // Opens the form modal (PopupForm.tsx) to allow adding a paddler.
+            openAddPaddlerModal()
+        } else{
+            const selectedPaddler = activeRosterState.find((paddler) => paddler.id && paddler.id.toString() == selectedPaddlerId)
+            if (selectedPaddler){   
+                // Sets the current paddler stored locally in 'selectedPaddler' with the Paddler information.
+                setSelectedPaddler(selectedPaddler);
                 // Updates the 'activeRosterState' global state
                 changePaddlerStatus(selectedPaddler.name, rowNum, leftRightPosition)
+                // Adds the specific paddler to 'boatState:number[]' state (which stores the paddler ids).
+                setBoatState("add", Number(selectedPaddlerId))
             }
         }
     }
 
+    // deleteSeatSelection() clears a number of states, including:
+    // 'activeRosterState:Paddler[]' global state (main source of truth).
+    // 'selectedPaddler:Paddler' local state (for displaying paddler information in this component).
+    // 'clearToggleState: -1|1' is affected so that information in Roster component is updated.
+    // 'searchInput:string' local state for displaying the user's search in the input area in dropdown menu.
+    // 'boatState:number[]' global state that is an array that stores Paddler.id.
     const deleteSeatSelection: SeatSelectionType = (paddlerName, paddlerId, row, pos, ) => {
-        // changes/resets the activeRosterState's individual information.
+        // Changes/resets the activeRosterState's individual information.
         resetSeat(paddlerName, row, pos)
-        // helps to clear the useState in "RosterItem"
+        // Option '0', helps to change the 'clearStateToggle' state, which helps to clear
+        // the respective information in "RosterItem".
         toggleClear(0)
-        // sets the current paddler back to default (empty information).
+        // Sets the current paddler stored locally in 'selectedPaddler' back to default (empty information).
         setSelectedPaddler(defaultPaddler)
-        // resets the searchInput state
+        // Resets the searchInput state search bar.
         setSearchInput("")
-        // removes the specific paddler from BoatState (stores the paddler ids)
+        // Removes the specific paddler from 'boatState:number[]' state (which stores the paddler ids).
         setBoatState("remove", paddlerId)
     }
 
-    const openModal = () => {
+    // 'openAddPaddlerModal()' opens the form (PopupForm.tsx) to allow adding paddler .
+    const openAddPaddlerModal = () => {
+        // Closes the dropdown menu 
         closeMenu()
+        // Updates the global 'selectedPosition' state that indicates the user's seat selection.
         setSelectedPosition(rowNum, leftRightPosition )
+        // Updates global 'modalState' state to open the (PopupForm.tsx) modal to add paddler.
         setModalState(true)
     }
 
+    // 'closeMenu()' closes the dropdown menu.
     const closeMenu = () => {
-        // Resets the search input state to ""
+        // Resets the search input state to "".
         setSearchInput("")
-        // Hides the dropdown
+        // Hides the dropdown menu.
         setShowMenu(false)
     }
 
@@ -411,7 +424,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                         <li>
                                             <button
                                                 value="add-paddler"
-                                                onClick={openModal}
+                                                onClick={openAddPaddlerModal}
                                                 className={`border-b-2 w-[100%] bg-purple-100 pl-2 text-left border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
                                                     - add paddler -
                                             </button>
@@ -423,7 +436,6 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                                 paddlerInfo={ paddlerInfo } 
                                                 closeMenu={closeMenu}
                                                 onItemClick={onItemClick}
-
                                                 stylingClass={
                                                     idx === selectedIndex ? 'bg-gray-200' : ''
                                                 }

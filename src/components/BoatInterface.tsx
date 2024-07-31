@@ -6,6 +6,14 @@ import WeightAnalysis from './WeightAnalysis';
 import { WindowSize } from '../common/types';
 import ControlArea from './ControlArea/ControlArea';
 
+/** 
+ * Boat interface contains the main portions of the app. 
+ * WeightAnalysis - displays paddler information.
+ * ControlArea - allows user to save, clear, and load data.
+ * Boat - interface for entering and deleting paddlers from the boat.
+ * Roster - secondary display for paddler information in list form.
+*/
+
 interface BoatInterfaceProps {
     windowSize: WindowSize;
 }

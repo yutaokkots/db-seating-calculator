@@ -9,6 +9,11 @@ type FormInfoType = {
     weight: number;
 }
 
+/** 
+ * PopupForm, form that pop-ups for entering new paddler information.
+ * Stores new paddler information in activeRosterState.
+*/
+
 interface PopupFormProps {
     rowNum: number;
     leftRightPosition: number; 
