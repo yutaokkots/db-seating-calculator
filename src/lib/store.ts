@@ -53,11 +53,26 @@ export interface paddlerDataStore {
     setPaddlersState: (paddlerData: Paddler[]) => void;
     // sets 'activeRosterState' 
     setRosterState: (updateFnOrData: Paddler[] | ((prevState: Paddler[]) => Paddler[])) => void;
+    // adds a new Paddler to the activeRosterState
     addPaddlerToRoster: (newPaddler: Paddler) => void;
+    // filters through the activeRosterState and resets the particular paddler. Then sorts the roster.
     resetSeat: (paddlerName: string, newRow?: number, newBoatPos?: string) => void;
+    // updates the paddler information for specific paddler. Then sorts the roster.
     changePaddlerStatus: (paddlerName: string, newRow?:number,newBoatPos?:number) => void;
+    // toggler that is placed in certain locations to trigger useEffect, found in its dependency array
     toggleClear: (choice: number) => void;
+    // sorts the roster
     sortActiveRosterState: () => void;
+    // boatState holds the Paddler.id as an array of numbers
+    boatState: number[];
+    // counts the number of paddlers on the boat
+    paddlerNumState: number;
+    // adds/removes the paddler.id from the boatState
+    setBoatState: (action: 'add' | 'remove', paddlerId: number) => void;
+    // resets boatState and paddlerNumState
+    // resets boatState and paddlerNumState
+    clearBoatState: () => void;
+    updateBoatStateFromRoster: (newData: Paddler[]) => void;
 }
 
 export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
@@ -78,7 +93,6 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
     },
     addPaddlerToRoster: (newPaddler) => {
         set((state) => {
-
             const newPaddlerRow = newPaddler.row
             const newPaddlerBoatPos = newPaddler.boat_pos
             
@@ -233,6 +247,46 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
             );      
             return { activeRosterState: sortedRoster };    
         });  
+    },
+    boatState: [],
+    paddlerNumState: 0,
+    setBoatState: (action, paddlerId) => {
+        set(state => {
+            let newBoatState;
+            if (action === 'add') {
+                if (!state.boatState.includes(paddlerId)) {
+                    newBoatState = [...state.boatState, paddlerId];
+                } else {
+                    newBoatState = state.boatState; // No change if id already exists
+                }
+            } else if (action === 'remove') {
+                newBoatState = state.boatState.filter(id => id !== paddlerId);
+            } else {
+                newBoatState = state.boatState;
+            }
+            const newPaddlerNumState = newBoatState.length;
+            return {
+                boatState: newBoatState,
+                paddlerNumState: newPaddlerNumState
+            };
+        });
+    },
+    clearBoatState: () => {        
+        set({            
+            boatState: [],            
+            paddlerNumState: 0        
+        });    
+    },
+    updateBoatStateFromRoster: (newData: Paddler[]) => {        
+        set(() => {
+            const newBoatState = newData
+            .filter(paddler => paddler.row && paddler.row > 0)
+            .map(paddler => paddler.id);
+            return {
+                boatState: newBoatState,
+                paddlerNumState: newBoatState.length
+            };
+        });
     }
 }))
 
@@ -316,44 +370,56 @@ export const useSelectedPositionStore = create<SelectedPositionStore>((set) => (
 //     }
 // }))
 
-export interface BoatStore {
-    boatState: number[];
-    paddlerNumState: number;
-    setBoatState: (action: 'add' | 'remove', paddlerId: number) => void;
-    clearBoatState: () => void;
-}
+// export interface BoatStore {
+//     boatState: number[];
+//     paddlerNumState: number;
+//     setBoatState: (action: 'add' | 'remove', paddlerId: number) => void;
+//     clearBoatState: () => void;
+//     updateboatstatefromroster: () => void;
+// }
 
-export const useBoatStore = create<BoatStore>((set) => ({
-    boatState: [],
-    paddlerNumState: 0,
-    setBoatState: (action, paddlerId) => {
-        set(state => {
-            let newBoatState;
-            if (action === 'add') {
-                if (!state.boatState.includes(paddlerId)) {
-                    newBoatState = [...state.boatState, paddlerId];
-                } else {
-                    newBoatState = state.boatState; // No change if id already exists
-                }
-            } else if (action === 'remove') {
-                newBoatState = state.boatState.filter(id => id !== paddlerId);
-            } else {
-                newBoatState = state.boatState;
-            }
-            const newPaddlerNumState = newBoatState.length;
-            return {
-                boatState: newBoatState,
-                paddlerNumState: newPaddlerNumState
-            };
-        });
-    },
-    clearBoatState: () => {        
-        set({            
-            boatState: [],            
-            paddlerNumState: 0        
-        });    
-    }
-}));
+// export const useBoatStore = create<BoatStore>((set) => ({
+//     boatState: [],
+//     paddlerNumState: 0,
+//     setBoatState: (action, paddlerId) => {
+//         set(state => {
+//             let newBoatState;
+//             if (action === 'add') {
+//                 if (!state.boatState.includes(paddlerId)) {
+//                     newBoatState = [...state.boatState, paddlerId];
+//                 } else {
+//                     newBoatState = state.boatState; // No change if id already exists
+//                 }
+//             } else if (action === 'remove') {
+//                 newBoatState = state.boatState.filter(id => id !== paddlerId);
+//             } else {
+//                 newBoatState = state.boatState;
+//             }
+//             const newPaddlerNumState = newBoatState.length;
+//             return {
+//                 boatState: newBoatState,
+//                 paddlerNumState: newPaddlerNumState
+//             };
+//         });
+//     },
+//     clearBoatState: () => {        
+//         set({            
+//             boatState: [],            
+//             paddlerNumState: 0        
+//         });    
+//     },
+//     updateboatstatefromroster: () => {        
+//         set((state) => {
+//             const newBoatState = state.activeRosterState
+//             .filter(paddler => paddler.row && paddler.row > 0)
+//             .map(paddler => paddler.id);
+//             return {
+//                 boatState: newBoatState,
+//                 paddlerNumState: newBoatState.length
+//             };
+//         });
+//     }
+// }));
 
 /** 
 * States holding the information for displaying or hiding sensitive paddler information.

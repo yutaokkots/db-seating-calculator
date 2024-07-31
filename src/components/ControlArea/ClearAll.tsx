@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { 
-    paddlerDataStore, usePaddlerDataStore,
-    useBoatStore, BoatStore  
+    paddlerDataStore, usePaddlerDataStore 
     } from '../../lib/store'
 
 const ClearAll:React.FC = () => {
-    const { activeRosterState,  setRosterState, toggleClear }:paddlerDataStore = usePaddlerDataStore()
+    const { activeRosterState,  setRosterState, toggleClear, clearBoatState }:paddlerDataStore = usePaddlerDataStore()
     const [ deleteConfirm, setDeleteConfirm ] = useState<boolean>(false);
-    const { clearBoatState }:BoatStore = useBoatStore();
 
     const clearAllData = () => {
         const updatedRosterState = activeRosterState.map((paddler) => ({

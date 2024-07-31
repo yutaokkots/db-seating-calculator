@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { WindowSize } from '../common/types'
 import WeightIndicator from './WeightIndicator';
-import { useWeightStore, WeightStore } from '../lib/store.ts'
+import { useWeightStore, WeightStore, usePaddlerDataStore, paddlerDataStore, } from '../lib/store.ts'
 
 interface WeightAnalysisProps {
     windowSize: WindowSize;
@@ -35,6 +35,7 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
 
     // Showing or hiding sensitive information
     const { showWeight }:WeightStore = useWeightStore();
+    const { paddlerNumState }:paddlerDataStore = usePaddlerDataStore();
 
     useEffect(() => {
         setFrontBackDiff(frontWeight - backWeight)
@@ -48,9 +49,19 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                     <div className=" flex flex-col gap-1">
                         <div className="w-[10px] flex justify-center">
                             <div className="text-left transform -rotate-90 font-bold text-red-500">
-                                <span className="whitespace-nowrap">
-                                    {leftRightDiff > 0 && `+ ${Math.abs(leftRightDiff)} lbs`} 
-                                </span>
+                                {!showWeight && paddlerNumState == 1 ?
+                                    <>
+                                    {leftRightDiff > 0 &&
+                                        <div className="whitespace-nowrap">
+                                            <span className="blur-sm">xxx</span> lbs 
+                                        </div>
+                                    }
+                                    </>
+                                    :
+                                    <span className="whitespace-nowrap">
+                                        {leftRightDiff > 0 && `+ ${Math.abs(leftRightDiff)} lbs`} 
+                                    </span>
+                                }
                             </div>
                         </div>
                     </div>
@@ -98,7 +109,19 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                     </div>
                     <div className="flex flex-col gap-1">
                         <div className="w-[95px] sm:w-[130px] font-bold text-red-500 h-[20px]">
-                            <span>{frontBackDiff > 0 && `+ ${Math.abs(frontBackDiff)} lbs` }</span>
+                            {(!showWeight && paddlerNumState == 1) ?
+                                <div className="whitespace-nowrap" >
+                                    {frontBackDiff > 0 &&
+                                        <>
+                                            <span className="blur-sm">xxx</span> lbs 
+                                        </>
+                                    }
+                                </div>
+                                :
+                                <div className="whitespace-nowrap">
+                                    <span>{frontBackDiff > 0 && `+ ${Math.abs(frontBackDiff)} lbs` }</span>
+                                </div>
+                            }
                         </div>
                         <div className="bg-slate-200 rounded-md p-1 w-[95px] sm:w-[130px]  h-[90px] ">
                             <div className="font-bold "> 
@@ -162,7 +185,17 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                             </div>
                         </div>
                         <div className="w-[95px] sm:w-[130px] font-bold text-red-500 h-[20px]">
-                            <span>{frontBackDiff < 0 && `+ ${Math.abs(frontBackDiff)} lbs` }</span>
+                        {!showWeight && paddlerNumState == 1 ?
+                            <div className="whitespace-nowrap">
+                                {frontBackDiff < 0 &&
+                                    <>
+                                        <span className="blur-sm">xxx</span> lbs 
+                                    </>
+                                    }
+                            </div>
+                                :
+                                <span>{frontBackDiff < 0 && `+ ${Math.abs(frontBackDiff)} lbs` }</span>
+                            }
                         </div>
                     </div>
                     <div className="flex flex-col gap-1">
@@ -211,9 +244,19 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                     <div className="flex flex-col">
                         <div className="w-[10px] flex justify-center">
                             <div className="transform -rotate-90 text-left font-bold text-red-500 ">
+                            {!showWeight && paddlerNumState == 1 ?
+                                <>
+                                {leftRightDiff < 0 &&
+                                    <div className="whitespace-nowrap">
+                                        <span className="blur-sm">xxx</span> lbs 
+                                    </div>
+                                }
+                                </>
+                                    :
                                 <span className="whitespace-nowrap">
                                     {leftRightDiff < 0 && `+ ${Math.abs(leftRightDiff)} lbs` }
                                 </span>
+                            }
                             </div>
                         </div>
                     </div>

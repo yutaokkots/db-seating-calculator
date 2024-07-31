@@ -4,11 +4,10 @@ import {
     useModalDataStore, ModalDataStore, 
     useWeightStore, WeightStore,
     useSelectedPositionStore, SelectedPositionStore,
-    useBoatStore, BoatStore  
         } from '../../lib/store';
 import SeatingDelete from '../SeatingDelete';
 import PopupForm from '../PopupForm';
-import { Paddler, PaddlerKeys } from '../../common/types';
+import { Paddler } from '../../common/types';
 import { SeatSelectionType } from '../../common/types';
 
 const defaultPaddler: Paddler = {
@@ -48,36 +47,20 @@ interface DropdownCustom {
 
 interface DropdownElementProps {
     paddlerInfo: Paddler;
-    dropdownPosition: string;
     onItemClick: (selectedPaddlerId: string) => void;
     closeMenu: () => void;
+    stylingClass: string;
 }
 
-const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, dropdownPosition, onItemClick, closeMenu }) => {
+const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, onItemClick, closeMenu, stylingClass }) => {
     // The active roster
-    const { activeRosterState  }:paddlerDataStore = usePaddlerDataStore()
+    const {  boatState, setBoatState  }:paddlerDataStore = usePaddlerDataStore()
     // Showing or hiding sensitive information
     const { showWeight }:WeightStore = useWeightStore();
     // Stores user-selected seat
     const { setSelectedPosition }:SelectedPositionStore = useSelectedPositionStore();
-    // Store for the ids of paddlers on the boat.
-    const {boatState, setBoatState}:BoatStore = useBoatStore();
     // Shows or hides a dropdown element/item
     const [ showOption, setShowOption ] = useState<boolean>(true); 
-
-    // useEffect(()=>{
-    //     // // 'dropdownPosition' is a state that holds information about this component's type of position.
-    //     // // If the Paddler is able to be in this particular position (e.g. stern: true), then
-    //     // //      showOption is set to true. 
-    //     // if (dropdownPosition && (dropdownPosition in paddlerInfo) ) {
-    //     //     const propertyValue = paddlerInfo[dropdownPosition as PaddlerKeys];
-    //     //     propertyValue ? setShowOption(true) : setShowOption(false)
-    //     // } 
-    //     // if (paddlerInfo.row && paddlerInfo.row > 0){
-    //     //     setShowOption(false)
-    //     // }
-    //    
-    // },[activeRosterState])
     
     useEffect(() => {
         const isInBoatState = boatState.includes(paddlerInfo.id);
@@ -101,7 +84,7 @@ const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, dropdownP
                     <button
                         value={paddlerInfo.id}
                         onClick={handleItemClick}
-                        className={` ${!showOption ? "text-gray-300": "" }  w-[100%] border-b-2 px-1 hover:cursor-pointer hover:bg-gray-500 hover:text-white`}>
+                        className={`${stylingClass} ${!showOption ? "text-gray-400": "" }  w-[100%] border-b-2 px-1 hover:cursor-pointer hover:bg-gray-500 hover:text-white`}>
                         <div className="flex flex-row justify-between">
                             <div className="w-[50%] text-left">{paddlerInfo.name}</div> 
                             <div className="w-[50%] flex flex-row justify-between">
@@ -134,7 +117,9 @@ interface DropdownProps {
 
 const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     // Load active roster state from the zustand store
-    const { activeRosterState, resetSeat, toggleClear, clearAllToggle, changePaddlerStatus }:paddlerDataStore  = usePaddlerDataStore();
+    const { activeRosterState, resetSeat, toggleClear, 
+        clearAllToggle, changePaddlerStatus,
+        setBoatState }:paddlerDataStore  = usePaddlerDataStore();
     // Shows or hides the menu to select a paddler
     const [showMenu, setShowMenu] = useState<boolean>(false)
     // Stores the selected paddler
@@ -142,7 +127,10 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     // stores string value in the search
     const searchRef = useRef<HTMLInputElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+    // Search input, saves the input to help search in dropdown
     const [ searchInput, setSearchInput ] = useState<string>('');
+    // Saves the state for keyboard presses
+    const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
     // The row and boat-position information for the Dropdown Item. 
     // const [ selectedPosition, setSelectedPosition ] = useState<SelectedPosition>({
@@ -150,24 +138,30 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
     //     boat_pos: -1})
     const { selectedPosition, setSelectedPosition }:SelectedPositionStore = useSelectedPositionStore();
     const { modalState, setModalState }:ModalDataStore = useModalDataStore();
-    // Store for the ids of paddlers on the boat.
-    const {boatState, setBoatState}:BoatStore = useBoatStore();
 
     // Showing or hiding sensitive information
     const { showWeight }:WeightStore = useWeightStore();
 
     // Stores the position (drummer, pacer, etc) of the paddler in the boat.
-    const [ dropdownPosition, setdropdownPosition ] = useState<string>("");
+    //const [ dropdownPosition, setdropdownPosition ] = useState<string>("");
     // Stores the 'left', 'right' information; -1:default, 1="left", 2="right"
     const [ leftRightPosition, setLeftRightPosition ] = useState<number>(-1);
+
+    const filteredRoster = activeRosterState
+        .filter(paddler => 
+            paddler.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+        .sort((a, b) => 
+            a.name.localeCompare(b.name)
+        );
 
     useEffect(()=>{
         let currRow = -1
         if (position == "drum"){
-            setdropdownPosition("drummer")
+            //setdropdownPosition("drummer")
             currRow = 15
         } else if (position == "stern"){
-            setdropdownPosition("stern")
+            //setdropdownPosition("stern")
             currRow = 11
         } else if (position == "left"){
             setLeftRightPosition(1)
@@ -178,12 +172,12 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
             currRow = rowNum
         }
         if (rowNum > 0 && rowNum < 5){
-            setdropdownPosition("pacer")
+            //setdropdownPosition("pacer")
             
         } else if (rowNum > 4 && rowNum < 8){
-            setdropdownPosition("engine")
+            //setdropdownPosition("engine")
         } else if (rowNum > 7 && rowNum < 11){
-            setdropdownPosition("rocket")
+            //setdropdownPosition("rocket")
         }
         setSelectedPaddler(filterPaddlers(currRow, leftRightPosition))
     },[activeRosterState])
@@ -210,17 +204,39 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         setSelectedPaddler(defaultPaddler)
     },[clearAllToggle])
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (!showMenu) return;
+    
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                setSelectedIndex(prevIndex => (prevIndex + 1) % filteredRoster.length);
+                console.log("down")
+                console.log(selectedIndex)
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                setSelectedIndex(prevIndex => (prevIndex - 1 + filteredRoster.length) % filteredRoster.length);
+                console.log("up")
+                console.log(selectedIndex)
+            } else if (event.key === 'Enter' && selectedIndex >= 0) {
+                event.preventDefault();
+                console.log("enter")
+                const selectedPaddlerId = filteredRoster[selectedIndex].id.toString();
+                onItemClick(selectedPaddlerId);
+                closeMenu();
+            }
+        };
+    
+        document.addEventListener('keydown', handleKeyDown);
+    
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [showMenu, selectedIndex]);
+
     const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(evt.target.value)
     }
-
-    const filteredRoster = activeRosterState
-        .filter(paddler => 
-            paddler.name.toLowerCase().includes(searchInput.toLowerCase())
-        )
-        .sort((a, b) => 
-            a.name.localeCompare(b.name)
-        );
 
     const handleInputClick = () => {
         setShowMenu(!showMenu)
@@ -406,8 +422,11 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                                 key={idx}
                                                 paddlerInfo={ paddlerInfo } 
                                                 closeMenu={closeMenu}
-                                                dropdownPosition={ dropdownPosition }
                                                 onItemClick={onItemClick}
+
+                                                stylingClass={
+                                                    idx === selectedIndex ? 'bg-gray-200' : ''
+                                                }
                                                 />
                                         ))
                                     }

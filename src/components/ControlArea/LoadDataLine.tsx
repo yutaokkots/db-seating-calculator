@@ -18,10 +18,13 @@ interface DateData  {
 const LoadDataLine:React.FC<LoadDataLineProps> = ({ dataItem, deleteRoster }) => {
     const dateData:DateData = parseIDLocalTime(dataItem.rosterKey)
     const [ deleteConfirm, setDeleteConfirm ] = useState<boolean>(false);
-    const { setRosterState }:paddlerDataStore = usePaddlerDataStore()
+    const { setRosterState, updateBoatStateFromRoster }:paddlerDataStore = usePaddlerDataStore()
 
     const handleClickLoad = () => {
+        // Sets the new loaded data as 'activeRosterState'
         setRosterState(dataItem.data)
+        // Reads the new loaded data and updates the 'boatState' state
+        updateBoatStateFromRoster(dataItem.data)
     }
     
     const handleClickCancel = () => {
