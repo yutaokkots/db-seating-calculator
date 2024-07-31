@@ -1,8 +1,15 @@
 import React, {useState, useEffect, useRef} from 'react'
-import { usePaddlerDataStore, paddlerDataStore, useModalDataStore, ModalDataStore, useWeightStore, WeightStore  } from '../../lib/store';
+import { 
+    usePaddlerDataStore, paddlerDataStore, 
+    useModalDataStore, ModalDataStore, 
+    useWeightStore, WeightStore,
+    useSelectedPositionStore, SelectedPositionStore,
+    useBoatStore, BoatStore  
+        } from '../../lib/store';
 import SeatingDelete from '../SeatingDelete';
 import PopupForm from '../PopupForm';
 import { Paddler, PaddlerKeys } from '../../common/types';
+import { SeatSelectionType } from '../../common/types';
 
 const defaultPaddler: Paddler = {
     id: 0,
@@ -39,53 +46,62 @@ interface DropdownCustom {
     onChange: () => void;
 }
 
-export type SeatSelectionType = (paddlerName: string, row?: number, pos?: string) => void;
-
 interface DropdownElementProps {
-    setSelectedPosition: React.Dispatch<React.SetStateAction<SelectedPosition>>;
     paddlerInfo: Paddler;
     dropdownPosition: string;
     onItemClick: (selectedPaddlerId: string) => void;
     closeMenu: () => void;
-
 }
 
-const DropdownElement:React.FC<DropdownElementProps> = ({ setSelectedPosition, paddlerInfo, dropdownPosition, onItemClick, closeMenu }) => {
+const DropdownElement:React.FC<DropdownElementProps> = ({ paddlerInfo, dropdownPosition, onItemClick, closeMenu }) => {
+    // The active roster
     const { activeRosterState  }:paddlerDataStore = usePaddlerDataStore()
-    const [ showOption, setShowOption ] = useState<boolean>(true); 
     // Showing or hiding sensitive information
     const { showWeight }:WeightStore = useWeightStore();
+    // Stores user-selected seat
+    const { setSelectedPosition }:SelectedPositionStore = useSelectedPositionStore();
+    // Store for the ids of paddlers on the boat.
+    const {boatState, setBoatState}:BoatStore = useBoatStore();
+    // Shows or hides a dropdown element/item
+    const [ showOption, setShowOption ] = useState<boolean>(true); 
 
-    useEffect(()=>{
-        // 'dropdownPosition' is a state that holds information about this component's type of position.
-        // If the Paddler is able to be in this particular position (e.g. stern: true), then
-        //      showOption is set to true. 
-        if (dropdownPosition && (dropdownPosition in paddlerInfo) ) {
-            const propertyValue = paddlerInfo[dropdownPosition as PaddlerKeys];
-            propertyValue ? setShowOption(true) : setShowOption(false)
-        } 
-        if (paddlerInfo.row && paddlerInfo.row > 0){
-            setShowOption(false)
+    // useEffect(()=>{
+    //     // // 'dropdownPosition' is a state that holds information about this component's type of position.
+    //     // // If the Paddler is able to be in this particular position (e.g. stern: true), then
+    //     // //      showOption is set to true. 
+    //     // if (dropdownPosition && (dropdownPosition in paddlerInfo) ) {
+    //     //     const propertyValue = paddlerInfo[dropdownPosition as PaddlerKeys];
+    //     //     propertyValue ? setShowOption(true) : setShowOption(false)
+    //     // } 
+    //     // if (paddlerInfo.row && paddlerInfo.row > 0){
+    //     //     setShowOption(false)
+    //     // }
+    //    
+    // },[activeRosterState])
+    
+    useEffect(() => {
+        const isInBoatState = boatState.includes(paddlerInfo.id);
+        if (isInBoatState) {
+            setShowOption(false);
         }
-    },[activeRosterState])
-    
-    //onClick={() => onItemClick(paddlerInfo)} 
-    
+    }, [boatState, paddlerInfo.id])
+
     const handleItemClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
-        setSelectedPosition({row: -1, boat_pos: -1})
-        closeMenu()
+        setSelectedPosition(-1, -1)
         const selectedPaddlerId = evt.currentTarget.value;
+        setBoatState("add", Number(selectedPaddlerId))
         onItemClick(selectedPaddlerId);
+        closeMenu()
     }
 
     return(
         <>
-            {showOption &&
+
                 <li>
                     <button
                         value={paddlerInfo.id}
                         onClick={handleItemClick}
-                        className="w-[100%] border-b-2  px-1  hover:cursor-pointer hover:bg-gray-500 hover:text-white">
+                        className={` ${!showOption ? "text-gray-300": "" }  w-[100%] border-b-2 px-1 hover:cursor-pointer hover:bg-gray-500 hover:text-white`}>
                         <div className="flex flex-row justify-between">
                             <div className="w-[50%] text-left">{paddlerInfo.name}</div> 
                             <div className="w-[50%] flex flex-row justify-between">
@@ -101,7 +117,7 @@ const DropdownElement:React.FC<DropdownElementProps> = ({ setSelectedPosition, p
                         </div>
                     </button>
                 </li>
-            }
+            
         </>
     )
 }
@@ -117,18 +133,25 @@ interface DropdownProps {
 }
 
 const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
-    // load active roster state
-    const { activeRosterState, resetSeat, toggleClear, clearAllToggle, changePaddlerStatus }:paddlerDataStore  = usePaddlerDataStore() 
+    // Load active roster state from the zustand store
+    const { activeRosterState, resetSeat, toggleClear, clearAllToggle, changePaddlerStatus }:paddlerDataStore  = usePaddlerDataStore();
+    // Shows or hides the menu to select a paddler
     const [showMenu, setShowMenu] = useState<boolean>(false)
+    // Stores the selected paddler
     const [selectedPaddler, setSelectedPaddler] = useState<Paddler>(defaultPaddler)
     // stores string value in the search
     const searchRef = useRef<HTMLInputElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+    const [ searchInput, setSearchInput ] = useState<string>('');
 
     // The row and boat-position information for the Dropdown Item. 
-    const [ selectedPosition, setSelectedPosition ] = useState<SelectedPosition>({row: -1,
-         boat_pos: -1})
+    // const [ selectedPosition, setSelectedPosition ] = useState<SelectedPosition>({
+    //     row: -1,
+    //     boat_pos: -1})
+    const { selectedPosition, setSelectedPosition }:SelectedPositionStore = useSelectedPositionStore();
     const { modalState, setModalState }:ModalDataStore = useModalDataStore();
+    // Store for the ids of paddlers on the boat.
+    const {boatState, setBoatState}:BoatStore = useBoatStore();
 
     // Showing or hiding sensitive information
     const { showWeight }:WeightStore = useWeightStore();
@@ -162,9 +185,7 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         } else if (rowNum > 7 && rowNum < 11){
             setdropdownPosition("rocket")
         }
-
         setSelectedPaddler(filterPaddlers(currRow, leftRightPosition))
-
     },[activeRosterState])
 
     useEffect(() => {
@@ -189,9 +210,21 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         setSelectedPaddler(defaultPaddler)
     },[clearAllToggle])
 
+    const handleSearchChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchInput(evt.target.value)
+    }
+
+    const filteredRoster = activeRosterState
+        .filter(paddler => 
+            paddler.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+        .sort((a, b) => 
+            a.name.localeCompare(b.name)
+        );
+
     const handleInputClick = () => {
         setShowMenu(!showMenu)
-        setSelectedPosition({row: rowNum, boat_pos: leftRightPosition })
+        setSelectedPosition(rowNum, leftRightPosition )
     }
 
     const filterPaddlers = (row?: number, boat_pos?: number): Paddler => {
@@ -211,11 +244,9 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         return paddlerByRow[0] || defaultPaddler
     };
 
-
     // onItemClick() function is prop-drilled; triggered when a dropdown item is selected.
     const onItemClick = (selectedPaddlerId: string) => {
         const selectedPaddler = activeRosterState.find((paddler) => paddler.id && paddler.id.toString() == selectedPaddlerId)
-
         if (selectedPaddler){   
             setSelectedPaddler(selectedPaddler);
             if (selectedPaddlerId == "add-paddler"){
@@ -227,23 +258,29 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         }
     }
 
-    const deleteSeatSelection: SeatSelectionType = (paddlerName, row, pos) => {
+    const deleteSeatSelection: SeatSelectionType = (paddlerName, paddlerId, row, pos, ) => {
         // changes/resets the activeRosterState's individual information.
         resetSeat(paddlerName, row, pos)
         // helps to clear the useState in "RosterItem"
         toggleClear(0)
         // sets the current paddler back to default (empty information).
         setSelectedPaddler(defaultPaddler)
+        // resets the searchInput state
+        setSearchInput("")
+        // removes the specific paddler from BoatState (stores the paddler ids)
+        setBoatState("remove", paddlerId)
     }
 
     const openModal = () => {
         closeMenu()
-        setSelectedPosition({row: rowNum, boat_pos: leftRightPosition })
+        setSelectedPosition(rowNum, leftRightPosition )
         setModalState(true)
-        console.log(rowNum, leftRightPosition)
     }
 
     const closeMenu = () => {
+        // Resets the search input state to ""
+        setSearchInput("")
+        // Hides the dropdown
         setShowMenu(false)
     }
 
@@ -255,7 +292,9 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
         <>
             <div className=" flex justify-center  w-[100%]">
                 <div 
-                    className={` ${showMenu && rowNum == selectedPosition.row || modalState && rowNum == selectedPosition.row? "bg-red-600":""} flex flex-row w-[100%] h-[25px] px-1 border-2 rounded-md items-center justify-between relative hover:cursor-pointer`}>
+                    className={`${showMenu && rowNum == selectedPosition.row && leftRightPosition == selectedPosition.boat_pos || 
+                                modalState && rowNum == selectedPosition.row && leftRightPosition == selectedPosition.boat_pos ? "bg-red-600":""} 
+                                flex flex-row w-[100%] h-[25px] px-1 border-2 rounded-md items-center justify-between relative hover:cursor-pointer`}>
                     <SeatingDelete 
                         rowNum={rowNum}
                         position={position}
@@ -288,12 +327,11 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                     <PopupForm 
                         rowNum={ rowNum }
                         leftRightPosition={ leftRightPosition } 
-                        selectedPosition={ selectedPosition }
-                        setSelectedPosition={setSelectedPosition}
                         setSelectedPaddler={setSelectedPaddler}/>
                     { showMenu && (
                         <div 
-                            className="fixed z-50 top-0 left-0 backdrop-blur-sm  display:none w-screen h-screen hover:cursor-default"
+                            onClick={closeMenu}
+                            className="fixed z-50 top-0 left-0 backdrop-blur-sm display:none w-screen h-screen hover:cursor-default"
                             >
                             <div
                                 onClick={handleInternalClick }
@@ -349,6 +387,8 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                         <li>
                                             <input
                                                 ref={searchRef} 
+                                                value={searchInput}
+                                                onChange={handleSearchChange}
                                                 className="w-full">
                                             </input>
                                         </li>
@@ -361,11 +401,10 @@ const DropdownCustom:React.FC<DropdownProps> = ({ rowNum, position }) => {
                                             </button>
                                         </li>
                                     { activeRosterState && 
-                                        activeRosterState.map((paddlerInfo, idx) => (
+                                        filteredRoster.map((paddlerInfo, idx) => (
                                             <DropdownElement 
                                                 key={idx}
                                                 paddlerInfo={ paddlerInfo } 
-                                                setSelectedPosition={setSelectedPosition}
                                                 closeMenu={closeMenu}
                                                 dropdownPosition={ dropdownPosition }
                                                 onItemClick={onItemClick}

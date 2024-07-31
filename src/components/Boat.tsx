@@ -1,5 +1,4 @@
 import React from 'react'
-
 import Seating from './Seating';
 import ShowHideIcons from './Toggler/ShowHideIcons';
 
@@ -21,7 +20,6 @@ const Boat:React.FC = () => {
                 <div className="flex flex-row gap-2 justify-center p-2">
                     <ShowHideIcons />
                 </div>
-
                 <div>
                     <div className="relative w-[350px] h-[70px]">
                         <div className=" absolute inset-0 border-l-[100px] border-l-transparent border-r-[100px] border-r-transparent border-b-[70px] border-b-white rounded-t-[20px]">

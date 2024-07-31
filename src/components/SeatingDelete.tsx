@@ -1,5 +1,5 @@
 import React from 'react'
-import { SeatSelectionType } from './Seating';
+import { SeatSelectionType } from '../common/types';
 import { Paddler } from '../common/types';
 
 interface SeatingDeleteProps{
@@ -11,7 +11,7 @@ interface SeatingDeleteProps{
 
 const SeatingDelete:React.FC<SeatingDeleteProps> = ({ rowNum, position, deleteSeatSelection, selectedPaddler }) => {
     const handleDelete = () => {
-        deleteSeatSelection(selectedPaddler.name, rowNum, position)
+        deleteSeatSelection(selectedPaddler.name, selectedPaddler.id, rowNum, position )
     }
 
     return (

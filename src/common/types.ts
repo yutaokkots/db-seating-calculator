@@ -27,3 +27,9 @@ export interface Paddler {
 }
 
 export type PaddlerKeys = keyof Paddler;
+
+export type SeatSelectionType = (
+    paddlerName: string, 
+    paddlerId: number, 
+    row?: number, 
+    pos?: string ) => void;

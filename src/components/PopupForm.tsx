@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useModalDataStore, ModalDataStore, usePaddlerDataStore, Paddler, paddlerDataStore} from '../lib/store';
-import { SelectedPosition } from './assets/DropdownCustom';
+import { 
+    useModalDataStore, ModalDataStore, 
+    usePaddlerDataStore, Paddler, paddlerDataStore,
+    useSelectedPositionStore, SelectedPositionStore} from '../lib/store';
 
 type FormInfoType = {
     name: string;
@@ -10,15 +12,14 @@ type FormInfoType = {
 interface PopupFormProps {
     rowNum: number;
     leftRightPosition: number; 
-    selectedPosition: SelectedPosition;
     setSelectedPaddler: React.Dispatch<React.SetStateAction<Paddler>>;
-    setSelectedPosition: React.Dispatch<React.SetStateAction<SelectedPosition>>;
 }
 
-const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selectedPosition, setSelectedPosition, setSelectedPaddler }) => {
+const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, setSelectedPaddler }) => {
     const [ formInfo, setFormInfo ] = useState<FormInfoType>({ name: "", weight: 0});
-    const { modalState, setModalState }:ModalDataStore = useModalDataStore();
     const { addPaddlerToRoster, activeRosterState }: paddlerDataStore = usePaddlerDataStore();
+    const { modalState, setModalState }:ModalDataStore = useModalDataStore();
+    const { selectedPosition, setSelectedPosition }:SelectedPositionStore = useSelectedPositionStore();
     const [ error, setError ] = useState<boolean>(false)
     const [ weightError, setWeightError ] = useState<boolean>(false)
 
@@ -36,7 +37,7 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
     const closeModal = () => {
         setModalState(false)
         setFormInfo({ name: "", weight: 0})
-        setSelectedPosition({row: -1, boat_pos: -1})
+        setSelectedPosition( -1, -1)
     }
 
     const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {

@@ -29,6 +29,7 @@ export interface Paddler {
     roster: boolean;
     row?:number;
     boat_pos?: number; // -1: none, 1: left, 2: right
+    onBoat?: boolean;
 }
 
 export interface ChangePaddlerStatus {
@@ -242,11 +243,6 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
 * @function setModalState - sets the modalState. 
 */
 
-export type SelectedPosition = {
-    row: number,
-    boat_pos: number
-}
-
 export interface ModalDataStore {
     modalState: boolean;
     setModalState: (status:boolean) => void;
@@ -258,6 +254,106 @@ export const useModalDataStore = create<ModalDataStore>((set) => ({
         set({modalState: status})
     }
 }))
+
+/** 
+* States holding which seat position is selected by the user. 
+* @state {} selectedPosition - an object that holds the row and boat_pos information selected by user.
+* @function setSelectedPosition - sets the selectedPosition. 
+*/
+
+export type SelectedPosition = {
+    row: number,
+    boat_pos: number
+}
+
+export interface SelectedPositionStore {
+    selectedPosition: SelectedPosition;
+    setSelectedPosition: (row: number, boat_pos:number) => void;
+}
+
+export const useSelectedPositionStore = create<SelectedPositionStore>((set) => ({
+    selectedPosition: {row: -1, boat_pos: -1},
+    setSelectedPosition: (row: number, boat_pos: number) => {
+        set({
+            selectedPosition: {row, boat_pos}
+        })
+    }
+}))
+
+/** 
+* States holding the number and/or paddler information of those inside boat.  
+* @state {} boatState - number[], a list of paddler id's.
+* @state {} paddlerNumState - number, records the number of paddlers in the boat.
+* @function setBoatState - (action: 'add' | 'remove', paddlerId: number) => void, sets the boatState. 
+*/
+
+// export interface BoatStore {
+//     boatState: Paddler[];
+//     paddlerNumState: number;
+//     setBoatState: (action: 'add' | 'remove', paddler: Paddler) => void;
+// }
+
+// export const useBoatStore = create<BoatStore>((set) => ({
+//     boatState: [],
+//     paddlerNumState: 0,
+//     setBoatState: (action, paddler) => {
+//         set(state => {
+//             let newBoatState;
+//             if (action === 'add') {
+//                 newBoatState = [...state.boatState, paddler];
+//             } else if (action === 'remove') {
+//                 newBoatState = state.boatState.filter(p => p.id !== paddler.id);
+//             } else {
+//                 newBoatState = state.boatState;
+//             }
+//             const newPaddlerNumState = newBoatState.length;
+
+//                 return {
+//                     boatState: newBoatState,
+//                     paddlerNumState: newPaddlerNumState
+//                 };        
+//             });    
+//     }
+// }))
+
+export interface BoatStore {
+    boatState: number[];
+    paddlerNumState: number;
+    setBoatState: (action: 'add' | 'remove', paddlerId: number) => void;
+    clearBoatState: () => void;
+}
+
+export const useBoatStore = create<BoatStore>((set) => ({
+    boatState: [],
+    paddlerNumState: 0,
+    setBoatState: (action, paddlerId) => {
+        set(state => {
+            let newBoatState;
+            if (action === 'add') {
+                if (!state.boatState.includes(paddlerId)) {
+                    newBoatState = [...state.boatState, paddlerId];
+                } else {
+                    newBoatState = state.boatState; // No change if id already exists
+                }
+            } else if (action === 'remove') {
+                newBoatState = state.boatState.filter(id => id !== paddlerId);
+            } else {
+                newBoatState = state.boatState;
+            }
+            const newPaddlerNumState = newBoatState.length;
+            return {
+                boatState: newBoatState,
+                paddlerNumState: newPaddlerNumState
+            };
+        });
+    },
+    clearBoatState: () => {        
+        set({            
+            boatState: [],            
+            paddlerNumState: 0        
+        });    
+    }
+}));
 
 /** 
 * States holding the information for displaying or hiding sensitive paddler information.
