@@ -70,8 +70,8 @@ export interface paddlerDataStore {
     // adds/removes the paddler.id from the boatState
     setBoatState: (action: 'add' | 'remove', paddlerId: number) => void;
     // resets boatState and paddlerNumState
-    // resets boatState and paddlerNumState
     clearBoatState: () => void;
+    // takes in activeRosterState:Paddler[] and updates the global 'boatState'.
     updateBoatStateFromRoster: (newData: Paddler[]) => void;
 }
 
@@ -280,8 +280,8 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
     updateBoatStateFromRoster: (newData: Paddler[]) => {        
         set(() => {
             const newBoatState = newData
-            .filter(paddler => paddler.row && paddler.row > 0)
-            .map(paddler => paddler.id);
+                .filter(paddler => paddler.row && paddler.row > 0)
+                .map(paddler => paddler.id);
             return {
                 boatState: newBoatState,
                 paddlerNumState: newBoatState.length
@@ -300,12 +300,19 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
 export interface ModalDataStore {
     modalState: boolean;
     setModalState: (status:boolean) => void;
+    showMenu: boolean;
+    setShowMenu: (status:boolean) => void;
 }
 
 export const useModalDataStore = create<ModalDataStore>((set) => ({
     modalState: false,
     setModalState: (status: boolean) => {
         set({modalState: status})
+    },
+    // not being used?:
+    showMenu: false,
+    setShowMenu: (status: boolean) => {
+        set({showMenu: status})
     }
 }))
 

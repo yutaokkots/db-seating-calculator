@@ -24,13 +24,14 @@ const App:React.FC = () => {
   const { setPaddlersState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
 
   // Selects/filters data to include only those where item.roster == true.
+  // Also adds new fields, row:number, boat_pos: number, and onBoat: boolean
   const filterRoster = (data: Paddler[]): Paddler[] => {
     return data
         .filter((item) => item.roster == true)
         .map((item) => ({
           ...item,
           boat_pos: 0,
-          row: -1
+          row: -1,
         })
        )
   }
