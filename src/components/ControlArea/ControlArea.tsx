@@ -13,7 +13,7 @@ const ControlArea:React.FC = () => {
     return (
         <div
             className=' p-2 mx-2"'>
-            <div className="rounded-lg bg-slate-50 gap-2 p-2 flex justify-center">
+            <div className="rounded-2xl border-l-2 border-r-2 gap-2 p-2 flex justify-center">
                 <div className="w-[340px] sm:w-[350px] flex flex-row justify-between">
                     <div className=" flex flex-row justify-center gap-1">
                         <div>               

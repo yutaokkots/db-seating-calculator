@@ -44,11 +44,11 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
 
     return (
         <>
-            <div className=" bg-slate-50 rounded-lg py-2 mt-2 mx-2 ">
+            <div className=" border-t-2 border-b-2 rounded-2xl py-2 mt-2 mx-2 ">
                 <div className="flex justify-center items-center gap-1">
                     <div className=" flex flex-col gap-1">
                         <div className="w-[10px] flex justify-center">
-                            <div className="text-left transform -rotate-90 font-bold text-red-500">
+                            <div className="text-left transform -rotate-90 font-bold text-red-200">
                                 {!showWeight && paddlerNumState == 1 ?
                                     <>
                                     {leftRightDiff > 0 &&
@@ -108,7 +108,7 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                         <div className="h-[20px]"></div>
                     </div>
                     <div className="flex flex-col gap-1">
-                        <div className="w-[95px] sm:w-[130px] font-bold text-red-500 h-[20px]">
+                        <div className="w-[95px] sm:w-[130px] font-bold text-red-200 h-[20px]">
                             {(!showWeight && paddlerNumState == 1) ?
                                 <div className="whitespace-nowrap" >
                                     {frontBackDiff > 0 &&
@@ -184,7 +184,7 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                                 }
                             </div>
                         </div>
-                        <div className="w-[95px] sm:w-[130px] font-bold text-red-500 h-[20px]">
+                        <div className="w-[95px] sm:w-[130px] font-bold text-red-200 h-[20px]">
                         {!showWeight && paddlerNumState == 1 ?
                             <div className="whitespace-nowrap">
                                 {frontBackDiff < 0 &&
@@ -243,7 +243,7 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                     </div>
                     <div className="flex flex-col">
                         <div className="w-[10px] flex justify-center">
-                            <div className="transform -rotate-90 text-left font-bold text-red-500 ">
+                            <div className="transform -rotate-90 text-left font-bold text-red-200 ">
                             {!showWeight && paddlerNumState == 1 ?
                                 <>
                                 {leftRightDiff < 0 &&

@@ -11,7 +11,7 @@ const ShareState:React.FC<SaveStateProps> = ({setShowShare}) => {
     }
     return (
         <button
-            className="border-2 py-1 px-2 rounded-md shadow-sm"
+            className="border-2 py-1 px-2 rounded-md shadow-sm bg-slate-100"
             onClick={handleClick}>   
             Data
         </button>
