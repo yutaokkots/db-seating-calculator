@@ -37,7 +37,7 @@ const ClearAll:React.FC = () => {
         <>
             { !deleteConfirm &&
             <button
-                className="border-2 py-1 px-2 rounded-md shadow-sm"
+                className="border-2 py-1 px-2 rounded-md shadow-sm bg-slate-100"
                 onClick={handleClickDelete}>   
                 Clear All     
             </button>
@@ -51,7 +51,7 @@ const ClearAll:React.FC = () => {
                     </button>
                     <button
                         onClick={handleClickCancel }
-                        className="border-2 py-1 px-2 rounded-md shadow-sm">
+                        className="border-2 py-1 px-2 rounded-md shadow-sm bg-slate-100">
                         Cancel
                     </button>
                 </>

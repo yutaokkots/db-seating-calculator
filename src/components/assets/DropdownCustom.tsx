@@ -9,6 +9,7 @@ import SeatingDelete from '../SeatingDelete';
 import PopupForm from '../PopupForm';
 import { Paddler } from '../../common/types';
 import { SeatSelectionType } from '../../common/types';
+import MiniBoat from '../MiniBoat';
 
 const defaultPaddler: Paddler = {
     id: 0,
@@ -445,7 +446,6 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                 <div className="">
                                     <div className="font-bold ">
                                         <div className="text-lg">Choose Paddler:</div> 
-                                        <div className="border-2 bg-black text-white rounded-md ">{rowNum > 0 && rowNum < 11 ? `row ${rowNum} -` : ""}  {position}</div>
                                     </div>
                                     { selectedPaddler.name != "" &&
                                     <div
@@ -482,7 +482,6 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                     }
                                 </div>
                                 <div className="relative w-[300px] h-[100px]">
-
                                     <div className="absolute left-[185px] w-[70px] h-[150px] font-sans top-2 ">
                                         <div className="text-left h-3 text-sm text-[#712d46] ">Drummer</div>
                                         <div className="text-left h-3 text-sm text-[#c01f0d] ">Pacer</div>
@@ -490,7 +489,7 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                         <div className="text-left h-3 text-sm text-[#a0b6ac] ">Rocket</div>
                                         <div className="text-left h-3 text-sm text-[#163552] ">Stern</div>
                                     </div>
-                                    <div className="absolute bottom-0 left-1 w-[100px]">
+                                    <div className="absolute bottom-0 right-0 w-[100px] shadow-md">
                                         <button
                                             value="add-paddler"
                                             onClick={openAddPaddlerModal}
@@ -498,6 +497,13 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                             className={`w-[100%] font-bold bg-purple-100 border border-purple-400 rounded-md  text-center border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
                                                 add paddler
                                         </button>
+                                    </div>
+                                    <div className="absolute left-2">
+                                        <div className=" absolute font-bold left-10 ">{rowNum > 0 && rowNum < 11 ? `row ${rowNum} -` : ""}  {position}</div>
+
+                                        <MiniBoat 
+                                            rowNum={rowNum}
+                                            leftRightPosition={leftRightPosition}/>
                                     </div>
                                     <div className="absolute left-[109px] -top-2" >
                                         <div className="relative w-[90px] h-[90px]">

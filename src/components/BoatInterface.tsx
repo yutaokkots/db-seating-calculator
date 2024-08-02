@@ -232,7 +232,7 @@ const BoatInterface:React.FC<BoatInterfaceProps> = ({ windowSize }) => {
                         />
                     </div>
                     {windowSize.width >= 640 && 
-                        <div className="w-[95px] sm:w-[120px] md:w-[200px] h-[540px] ">
+                        <div className="w-[95px] sm:w-[120px] md:w-[200px] h-auto ">
                             <Roster 
                                 windowSize={windowSize}/>
                         </div>

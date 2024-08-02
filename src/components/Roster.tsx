@@ -14,9 +14,9 @@ interface BoatInterfaceProps {
 const Roster:React.FC<BoatInterfaceProps> = ({windowSize}) => {
     const { activeRosterState }:paddlerDataStore = usePaddlerDataStore()  
     return (
-        <div className=" border-2 rounded-md border-gray-100 p-2  bg-slate-200 ">
-            <div className="font-bold pb-1">Roster</div>
-            <div className="text-left bg-white p-1 rounded-md h-[500px] overflow-y-scroll ">
+        <div className=" border-t-2 border-b-2 rounded-2xl border-gray-100 p-2  ">
+            <div className="font-bold pb-1 text-slate-200">Roster</div>
+            <div className="text-left bg-white p-1 rounded-xl h-[500px] overflow-y-scroll ">
                 {   activeRosterState.length == 0 
                     ? 
                         (

@@ -12,7 +12,7 @@ const SaveState:React.FC<SaveStateProps> = ({ setShowSaver }) => {
     return (
         <>
             <button
-                className="border-2 py-1 px-2 rounded-md shadow-sm"
+                className="border-2 bg-slate-100 py-1 px-2 rounded-md shadow-sm"
                 onClick={handleClick}>   
                 Save    
             </button>
