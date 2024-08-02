@@ -406,9 +406,9 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                         onClick={handleInputClick} 
                         onKeyDown={handleKeyDown}
                         tabIndex={0} 
-                        className="dropdown-input w-[80%] ">
-                        <div className="flex flex-row justify-between">
-                            <div className="w-[100%] flex flex-row justify-between text-sm overflow-x-hidden">
+                        className=" w-[80%] h-[20px]">
+                        <div className="flex flex-row justify-between items-center">
+                            <div className="w-[100%] text-left  text-sm overflow-x-hidden">
                                 {selectedPaddler.name &&
                                     <div className="font-bold text-nowrap">
                                         {selectedPaddler.name}
@@ -416,9 +416,7 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                 }
                             </div>
                             <div className="">
-                                <div className="">
-                                    <Icon isOpen={showMenu} />
-                                </div>
+                                <Icon isOpen={showMenu} />
                             </div>
                         </div>
                     </div>
