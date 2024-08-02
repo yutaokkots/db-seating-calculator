@@ -5,7 +5,17 @@ interface NavProps {
     setShowAbout: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const NavBar:React.FC<NavProps> = ({ setShowAbout, setShowInfo}) => {
+    const handleKeyDownInfo = (evt: React.KeyboardEvent<HTMLDivElement>) => {
+        if (evt.key === "Enter"){
+            setShowInfo(true)
+        }
+    }
 
+    const handleKeyDownAbout = (evt: React.KeyboardEvent<HTMLDivElement>) => {
+        if (evt.key === "Enter"){
+            setShowAbout(true)
+        }
+    }
     return (
         <nav
             className="flex justify-center py-1 z-50 shadow-2xl w-full h-14 fixed top-0 left-0 backdrop-filter backdrop-blur-xl opacity-95 bg-pink-900/80">
@@ -20,6 +30,8 @@ const NavBar:React.FC<NavProps> = ({ setShowAbout, setShowInfo}) => {
                         <li>
                             <div
                                 onClick={() => {setShowInfo(true)}} 
+                                onKeyDown={handleKeyDownInfo}
+                                tabIndex={0}
                                 className="font-bold text-white hover:cursor-pointer">
                                 Info
                             </div>
@@ -27,6 +39,8 @@ const NavBar:React.FC<NavProps> = ({ setShowAbout, setShowInfo}) => {
                         <li>
                             <div 
                                 onClick={() => {setShowAbout(true)}}
+                                onKeyDown={handleKeyDownAbout}
+                                tabIndex={0}
                                 className="font-bold text-white hover:cursor-pointer">
                                 About
                             </div>

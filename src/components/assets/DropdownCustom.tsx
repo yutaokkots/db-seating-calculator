@@ -35,7 +35,7 @@ interface IconProps {
 
 const Icon:React.FC<IconProps> = ({ isOpen }) => {
     return (
-        <svg viewBox="0 0 15 24" width="18" height="18" stroke="#222" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className={isOpen ? 'translate' : ''}>
+        <svg viewBox="0 0 15 30" width="10" height="10" stroke="#222" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className={isOpen ? 'translate' : ''}>
             <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
     );
@@ -104,11 +104,11 @@ const DropdownElement = React.forwardRef<HTMLLIElement, DropdownElementProps>  (
                         <div className="flex flex-row justify-between">
                             <div className="w-[35%] text-left">{paddlerInfo.name}</div> 
                             <div className="w-[25%]  flex flex-row justify-between items-center p-1">
-                                <div className={`${paddlerInfo.drummer ? 'bg-[#712d46]' : 'bg-white'} w-[12px] h-[12px] border border-gray-300  rounded-full`}></div>
-                                <div className={`${paddlerInfo.pacer   ? 'bg-[#c01f0d]': 'bg-white'} w-[12px] h-[12px] border border-gray-300  rounded-full`}></div>
-                                <div className={`${paddlerInfo.engine  ? 'bg-[#ebc328]': 'bg-white'} w-[12px] h-[12px] border border-gray-300  rounded-full`}></div>
-                                <div className={`${paddlerInfo.rocket  ? 'bg-[#a0b6ac]': 'bg-white'} w-[12px] h-[12px] border border-gray-300  rounded-full`}></div>
-                                <div className={`${paddlerInfo.stern   ? 'bg-[#163552]': 'bg-white'} w-[12px] h-[12px] border border-gray-300  rounded-full`}></div>
+                                <div className={`${paddlerInfo.drummer ? 'bg-[#712d46]': ''} w-[12px] h-[12px]   rounded-full`}></div>
+                                <div className={`${paddlerInfo.pacer   ? 'bg-[#c01f0d]': ''} w-[12px] h-[12px]   rounded-full`}></div>
+                                <div className={`${paddlerInfo.engine  ? 'bg-[#ebc328]': ''} w-[12px] h-[12px]   rounded-full`}></div>
+                                <div className={`${paddlerInfo.rocket  ? 'bg-[#a0b6ac]': ''} w-[12px] h-[12px]   rounded-full`}></div>
+                                <div className={`${paddlerInfo.stern   ? 'bg-[#163552]': ''} w-[12px] h-[12px]   rounded-full`}></div>
                             </div>
                             <div className="w-[40%] flex flex-row justify-between pl-1">
                                 {showWeight ?
@@ -410,13 +410,13 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                         <div className="flex flex-row justify-between">
                             <div className="w-[100%] flex flex-row justify-between text-sm overflow-x-hidden">
                                 {selectedPaddler.name &&
-                                    <div className="font-bold">
+                                    <div className="font-bold text-nowrap">
                                         {selectedPaddler.name}
                                     </div>
                                 }
                             </div>
-                            <div className="dropdown-tools">
-                                <div className="dropdown-tool">
+                            <div className="">
+                                <div className="">
                                     <Icon isOpen={showMenu} />
                                 </div>
                             </div>
@@ -449,13 +449,20 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                     </div>
                                     { selectedPaddler.name != "" &&
                                     <div
-                                        className={`flex flex-row justify-between border-t-2 border-b-2 text-left border-md `} >
-                                        <div className="w-[50%] flex flex-row ">
+                                        className={`flex flex-row justify-between border-t-2 border-b-2 text-left border-md w-[300px] p-3`} >
+                                        <div className="w-[35%] flex flex-row ">
                                             <div className="font-bold">
                                                 { selectedPaddler.name } 
                                             </div>
                                         </div>
-                                        <div className="w-[50%] flex flex-row justify-between">
+                                        <div className="w-[25%]  flex flex-row justify-between items-center p-1">
+                                            <div className={`${selectedPaddler.drummer ? 'bg-[#712d46]': ''} w-[12px] h-[12px] border  rounded-full`}></div>
+                                            <div className={`${selectedPaddler.pacer   ? 'bg-[#c01f0d]': ''} w-[12px] h-[12px] border  rounded-full`}></div>
+                                            <div className={`${selectedPaddler.engine  ? 'bg-[#ebc328]': ''} w-[12px] h-[12px] border  rounded-full`}></div>
+                                            <div className={`${selectedPaddler.rocket  ? 'bg-[#a0b6ac]': ''} w-[12px] h-[12px] border  rounded-full`}></div>
+                                            <div className={`${selectedPaddler.stern   ? 'bg-[#163552]': ''} w-[12px] h-[12px] border  rounded-full`}></div>
+                                        </div>
+                                        <div className="w-[40%] flex flex-row justify-between">
                                             <div className="text-left">
                                                 { selectedPaddler.weight && 
                                                     showWeight
@@ -481,21 +488,31 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                     </div>
                                     }
                                 </div>
-                                <div className="relative w-[300px] h-[100px]">
+                                <div className="relative w-[350px] h-[100px]">
                                     <div className="absolute left-[185px] w-[70px] h-[150px] font-sans top-2 ">
                                         <div className="text-left h-3 text-sm text-[#712d46] ">Drummer</div>
                                         <div className="text-left h-3 text-sm text-[#c01f0d] ">Pacer</div>
                                         <div className="text-left h-3 text-sm text-[#ebc328] ">Engine</div>
                                         <div className="text-left h-3 text-sm text-[#a0b6ac] ">Rocket</div>
-                                        <div className="text-left h-3 text-sm text-[#163552] ">Stern</div>
+                                        <div className="text-left h-3 text-sm text-[#163552] ">Steerer</div>
                                     </div>
-                                    <div className="absolute bottom-0 right-0 w-[100px] shadow-md">
+                                    <div className="absolute right-8 top-3  w-[70px]">
+                                            <div className="flex flex-col gap-[2px] ">
+                                                <div className={`w-[10px] h-[10px] rounded-full ${rowNum == 15                  ? "bg-[#712d46] " : ""} border`}></div>
+                                                <div className={`w-[10px] h-[10px] rounded-full ${rowNum >= 1 && rowNum <= 4    ? "bg-[#c01f0d] " : ""} border`}></div>
+                                                <div className={`w-[10px] h-[10px] rounded-full ${rowNum >= 4 && rowNum <= 7    ? "bg-[#ebc328] " : ""} border`}></div>
+                                                <div className={`w-[10px] h-[10px] rounded-full ${rowNum >= 8 && rowNum <= 10   ? "bg-[#a0b6ac] " : ""} border`}></div>
+                                                <div className={`w-[10px] h-[10px] rounded-full ${rowNum == 11                  ? "bg-[#163552] " : ""} border`}></div>
+                                            </div>
+                                        </div>
+                                    
+                                    <div className="absolute bottom-0 right-14 shadow-md z-10 w-[100px]">
                                         <button
                                             value="add-paddler"
                                             onClick={openAddPaddlerModal}
                                             onKeyDown={handleKeyDownAddPaddler}
-                                            className={`w-[100%] font-bold bg-purple-100 border border-purple-400 rounded-md  text-center border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
-                                                add paddler
+                                            className={`w-full font-bold bg-purple-100 border border-purple-400 rounded-md  text-center border-md hover:cursor-pointer hover:bg-gray-500 hover:text-white`} >
+                                                new paddler
                                         </button>
                                     </div>
                                     <div className="absolute left-2">

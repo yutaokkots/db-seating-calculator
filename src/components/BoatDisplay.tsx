@@ -4,6 +4,7 @@ import Indicator from './Indicator';
 import { BoatWeight } from './BoatInterface';
 import ShowHideIcons from './Toggler/ShowHideIcons';
 import Toggler from './Toggler/Toggler';
+import { useWeightStore, WeightStore } from '../lib/store';
 
 interface BoatDisplayProps {
     boatWeight: BoatWeight
@@ -11,6 +12,7 @@ interface BoatDisplayProps {
 
 const BoatDisplay:React.FC<BoatDisplayProps> = ({ boatWeight }) => {
     const rows = Array.from({ length: 10 }, (_, i) => i + 1 as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10);
+    const {showWeight}:WeightStore = useWeightStore()
 
     return (
         <>
@@ -22,7 +24,7 @@ const BoatDisplay:React.FC<BoatDisplayProps> = ({ boatWeight }) => {
                     <div className="flex flex-row ">
                         <div className="flex flex-col items-center justify-center w-[52px] h-[400px] ">
                             <div className="flex flex-col justify-between gap-3 h-[350px] w-[50px] pr-[2px]">
-                            {
+                            { showWeight &&
                                 rows.map((r, idx) => (
                                     <Indicator 
                                         key={idx}
@@ -41,8 +43,7 @@ const BoatDisplay:React.FC<BoatDisplayProps> = ({ boatWeight }) => {
                     <div className="flex flex-row ">
                         <div className="flex flex-col items-center justify-center w-[52px]  h-[400px] ">
                             <div className="flex flex-col justify-between gap-3 h-[350px] w-[50px] pl-[2px]">
-                            
-                            {
+                            { showWeight &&
                                 rows.map((r, idx) => (
                                     <Indicator 
                                         key={idx}

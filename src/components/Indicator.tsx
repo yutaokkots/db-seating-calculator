@@ -93,9 +93,11 @@ const Indicator:React.FC<IndicatorProps> = ({ rowNum, colNum, boatWeight }) => {
 
                 <>
                     { colNum== 1 && paddlerWeight > 0 &&
-                            <DisplayWeight
-                                weight={paddlerWeight}
-                            />
+                            <div className={`  ${indicatorOn ? "bg-white bg-opacity-20 rounded-sm px-1  " : ""}`}>
+                                <DisplayWeight
+                                    weight={paddlerWeight}
+                                />
+                            </div>
                     }
                     { paddlerWeight > 0 &&
                         <div className="flex flex-row justify-between items-center gap-[2px]">
@@ -103,9 +105,11 @@ const Indicator:React.FC<IndicatorProps> = ({ rowNum, colNum, boatWeight }) => {
                         </div>
                     }
                     { colNum== 2 && paddlerWeight > 0 &&
-                            <DisplayWeight 
-                                weight={paddlerWeight}
-                            />
+                            <div className={`  ${indicatorOn ? "bg-white bg-opacity-20 rounded-sm px-1" : ""}`}>
+                                <DisplayWeight 
+                                    weight={paddlerWeight}
+                                    />
+                            </div>
                     }
                 </>
 
