@@ -34,7 +34,7 @@ interface IconProps {
 
 const Icon:React.FC<IconProps> = ({ isOpen }) => {
     return (
-        <svg viewBox="0 0 24 24" width="18" height="18" stroke="#222" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className={isOpen ? 'translate' : ''}>
+        <svg viewBox="0 0 15 24" width="18" height="18" stroke="#222" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className={isOpen ? 'translate' : ''}>
             <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
     );
@@ -379,7 +379,7 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
         setSearchInput("")
         // Hides the dropdown menu.
         setShowMenu(false)
-        setSelectedPaddler(defaultPaddler)
+        // setSelectedPaddler(defaultPaddler)
         // Resets the selected index (for arrow-key selection in dropdown).
         setSelectedIndex(-1)
     }
@@ -413,11 +413,6 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                         {selectedPaddler.name}
                                     </div>
                                 }
-                                { selectedPaddler.weight > 0 && showWeight &&
-                                    <div className="">
-                                        {selectedPaddler.weight}
-                                    </div>
-                                }   
                             </div>
                             <div className="dropdown-tools">
                                 <div className="dropdown-tool">
@@ -433,7 +428,7 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                     { showMenu && (
                         <div 
                             onClick={closeMenu}
-                            className="fixed z-50 top-0 left-0 backdrop-blur-sm display:none w-screen h-screen hover:cursor-default"
+                            className="transform-none fixed z-50 top-0 left-0 backdrop-blur-sm display:none w-screen h-screen hover:cursor-default"
                             >
                             <div
                                 onClick={handleInternalClick }
@@ -450,7 +445,7 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                 <div className="">
                                     <div className="font-bold ">
                                         <div className="text-lg">Choose Paddler:</div> 
-                                        <div>{rowNum > 0 && rowNum < 11 ? `row ${rowNum} -` : ""}  {position}</div>
+                                        <div className="border-2 bg-black text-white rounded-md ">{rowNum > 0 && rowNum < 11 ? `row ${rowNum} -` : ""}  {position}</div>
                                     </div>
                                     { selectedPaddler.name != "" &&
                                     <div
@@ -489,7 +484,7 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                 <div className="relative w-[300px] h-[100px]">
 
                                     <div className="absolute left-[185px] w-[70px] h-[150px] font-sans top-2 ">
-                                        <div className="text-left h-3 text-sm text-[#712d46] " >Drummer</div>
+                                        <div className="text-left h-3 text-sm text-[#712d46] ">Drummer</div>
                                         <div className="text-left h-3 text-sm text-[#c01f0d] ">Pacer</div>
                                         <div className="text-left h-3 text-sm text-[#ebc328] ">Engine</div>
                                         <div className="text-left h-3 text-sm text-[#a0b6ac] ">Rocket</div>
@@ -506,11 +501,11 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
                                     </div>
                                     <div className="absolute left-[109px] -top-2" >
                                         <div className="relative w-[90px] h-[90px]">
-                                            <div className="absolute w-full bottom-0  left-[12px] h-[1px] rounded-md bg-black origin-bottom-left -rotate-45"></div>
-                                            <div className="absolute w-[80%] bottom-0 left-[24px] h-[1px] rounded-md bg-black origin-bottom-left -rotate-45"></div>
-                                            <div className="absolute w-[60%] bottom-0 left-[36px] h-[1px] rounded-md bg-black origin-bottom-left -rotate-45"></div>
-                                            <div className="absolute w-[40%] bottom-0 left-[48px] h-[1px] rounded-md bg-black origin-bottom-left -rotate-45"></div>
-                                            <div className="absolute w-[20%] bottom-0 left-[60px] h-[1px] rounded-md bg-black origin-bottom-left -rotate-45"></div>
+                                            <div className="absolute w-full bottom-0  left-[12px] h-[1px] rounded-md bg-[#712d46] origin-bottom-left -rotate-45"></div>
+                                            <div className="absolute w-[80%] bottom-0 left-[24px] h-[1px] rounded-md bg-[#c01f0d] origin-bottom-left -rotate-45"></div>
+                                            <div className="absolute w-[60%] bottom-0 left-[36px] h-[1px] rounded-md bg-[#ebc328] origin-bottom-left -rotate-45"></div>
+                                            <div className="absolute w-[40%] bottom-0 left-[48px] h-[1px] rounded-md bg-[#a0b6ac] origin-bottom-left -rotate-45"></div>
+                                            <div className="absolute w-[20%] bottom-0 left-[60px] h-[1px] rounded-md bg-[#163552] origin-bottom-left -rotate-45"></div>
                                         </div>
                                         <div className="flex flex-row justify-between p-1 w-[70px]">
                                             <div className="w-[12px] h-[12px] rounded-full bg-[#712d46] border border-gray-300"></div>

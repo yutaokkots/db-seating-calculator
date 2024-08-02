@@ -98,8 +98,9 @@ const App:React.FC = () => {
         />
       <div className="pt-14 ">
         <div className="bg-gradient-to-tl from-violet-200 to-white">
-          <div className="text-black text-2xl font-bold font-sans">
-            RPT Dragon Boat Seat Placement
+          <div className="text-pink-900 text-2xl font-bold font-sans flex flex-col text-center">
+            <span>RPT Dragon Boat</span>
+            <span>Seat Placement</span>
           </div>
           <div className="flex justify-center">
             <Loading />
