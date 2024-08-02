@@ -75,11 +75,11 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                                 leftRightDiff={leftRightDiff}
                                 />
                         </div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[95px] sm:w-[130px] h-[90px] ">
+                        <div className="bg-slate-200 rounded-xl p-1 w-[95px] sm:w-[130px] h-[90px] ">
                             <div className="font-bold "> 
                                 {windowSize.width >= 640 ?  "Port/Left" : "L"} 
                             </div>
-                            <div className="bg-white rounded-sm p-1 h-[57px]">
+                            <div className="bg-white rounded-md p-1 h-[57px]">
                                 { showWeight 
                                     ?
                                     <div className="font-bold "> 
@@ -123,11 +123,11 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                                 </div>
                             }
                         </div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[95px] sm:w-[130px]  h-[90px] ">
+                        <div className="bg-slate-200 rounded-xl p-1 w-[95px] sm:w-[130px]  h-[90px] ">
                             <div className="font-bold "> 
                                 {windowSize.width >= 640 ?  "Front" : "F"} 
                             </div>
-                            <div className="bg-white rounded-sm p-1 h-[57px]">
+                            <div className="bg-white rounded-md p-1 h-[57px]">
                                 { showWeight 
                                     ?
                                     <div className="font-bold "> 
@@ -145,11 +145,11 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                                 }
                             </div>
                         </div>
-                        <div className="bg-blue-200 rounded-md p-1 w-[95px] sm:w-[130px] ">
+                        <div className="bg-blue-200 rounded-xl p-1 w-[95px] sm:w-[130px] ">
                             <div className="font-bold "> 
                                 {windowSize.width >= 640 ?  "Total Weight" : "Total"} 
                             </div>
-                            <div className="bg-white rounded-sm p-1 h-[57px]">
+                            <div className="bg-white rounded-md p-1 h-[57px]">
                                 { showWeight 
                                     ?
                                     <div className="font-bold "> 
@@ -162,11 +162,11 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                                 }
                             </div>
                         </div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[95px] sm:w-[130px]  h-[90px] ">
+                        <div className="bg-slate-200 rounded-xl p-1 w-[95px] sm:w-[130px]  h-[90px] ">
                             <div className="font-bold "> 
                                 {windowSize.width >= 640 ?  "Back" : "B"} 
                             </div>
-                            <div className="bg-white rounded-sm h-[57px]">
+                            <div className="bg-white rounded-md h-[57px]">
                                 { showWeight 
                                     ?
                                     <div className="font-bold "> 
@@ -209,11 +209,11 @@ const WeightAnalysis:React.FC<WeightAnalysisProps> = ({
                                 leftRightDiff={leftRightDiff}
                                 />
                         </div>
-                        <div className="bg-slate-200 rounded-md p-1 w-[100px] sm:w-[130px]  h-[90px] ">
+                        <div className="bg-slate-200 rounded-xl p-1 w-[100px] sm:w-[130px]  h-[90px] ">
                             <div className="font-bold "> 
                                 {windowSize.width >= 640 ?  "Starboard/Right" : "R"}
                             </div>
-                            <div className="bg-white rounded-sm p-1 h-[57px]">
+                            <div className="bg-white rounded-md p-1 h-[57px]">
                                 { showWeight 
                                     ?
                                     <div className="font-bold "> 

@@ -27,8 +27,8 @@ const MiniBoat:React.FC<MiniBoatProps> = ({ rowNum, leftRightPosition}) => {
                 <div className={`absolute top-0 left-3        ${rowNum == 1 && leftRightPosition == 2? "bg-red-400": "bg-white"}  h-[6px] w-[6px] rounded-full `}></div>
             </div>
             <div className={`absolute top-4 left-1`}>
-                <div className={`absolute top-0 left-[3px]    ${rowNum == 2 && leftRightPosition == 1? "bg-red-400": "bg-wxxhite"}  h-[6px] w-[6px] rounded-full `}></div>
-                <div className={`absolute top-0 left-3        ${rowNum == 2 && leftRightPosition == 2? "bg-red-400": "bg-wxxhite"}  h-[6px] w-[6px] rounded-full `}></div>
+                <div className={`absolute top-0 left-[3px]    ${rowNum == 2 && leftRightPosition == 1? "bg-red-400": "bg-white"}  h-[6px] w-[6px] rounded-full `}></div>
+                <div className={`absolute top-0 left-3        ${rowNum == 2 && leftRightPosition == 2? "bg-red-400": "bg-white"}  h-[6px] w-[6px] rounded-full `}></div>
             </div>
             <div className={`absolute top-6 left-1`}>
                 <div className={`absolute top-0 left-[3px]    ${rowNum == 3 && leftRightPosition == 1? "bg-red-400": "bg-white"}  h-[6px] w-[6px] rounded-full `}></div>
