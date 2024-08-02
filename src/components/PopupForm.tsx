@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react'
-import { useModalDataStore, ModalDataStore, usePaddlerDataStore, Paddler, paddlerDataStore} from '../lib/store';
-import { SelectedPosition } from './assets/DropdownCustom';
+import { 
+    useModalDataStore, ModalDataStore, 
+    usePaddlerDataStore, Paddler, paddlerDataStore,
+    useSelectedPositionStore, SelectedPositionStore} from '../lib/store';
 
 type FormInfoType = {
     name: string;
     weight: number;
 }
 
+/** 
+ * PopupForm, form that pop-ups for entering new paddler information.
+ * Stores new paddler information in activeRosterState.
+*/
+
 interface PopupFormProps {
     rowNum: number;
     leftRightPosition: number; 
-    selectedPosition: SelectedPosition;
     setSelectedPaddler: React.Dispatch<React.SetStateAction<Paddler>>;
-    setSelectedPosition: React.Dispatch<React.SetStateAction<SelectedPosition>>;
 }
 
-const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selectedPosition, setSelectedPosition, setSelectedPaddler }) => {
+const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, setSelectedPaddler }) => {
     const [ formInfo, setFormInfo ] = useState<FormInfoType>({ name: "", weight: 0});
-    const { modalState, setModalState }:ModalDataStore = useModalDataStore();
     const { addPaddlerToRoster, activeRosterState }: paddlerDataStore = usePaddlerDataStore();
+    const { modalState, setModalState }:ModalDataStore = useModalDataStore();
+    const { selectedPosition, setSelectedPosition }:SelectedPositionStore = useSelectedPositionStore();
     const [ error, setError ] = useState<boolean>(false)
     const [ weightError, setWeightError ] = useState<boolean>(false)
 
@@ -36,7 +42,7 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
     const closeModal = () => {
         setModalState(false)
         setFormInfo({ name: "", weight: 0})
-        setSelectedPosition({row: -1, boat_pos: -1})
+        setSelectedPosition( -1, -1)
     }
 
     const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -156,14 +162,13 @@ const PopupForm:React.FC<PopupFormProps> = ({ rowNum, leftRightPosition, selecte
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`w-6 h-6 ${error || weightError || formInfo.weight == 0 || formInfo.name == ''? "text-slate-200": "text-slate-500"}`}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                                 </svg>
-
                         </button>
                     </form>
                 </div>
             </div>
             }
         </>
-  )
+    )
 }
 
 export default PopupForm

@@ -29,7 +29,7 @@ const PopupAbout:React.FC<PopupAboutProps> = ({ showAbout, setShowAbout}) => {
                             <h1 className="font-bold text-lg">Dragon Boat Calculator</h1>
                             <p className="text-left">This dragonboat calculator is a simple proof-of-concept web app that loads paddler information, and helps to see weight distribution on a dragon boat.</p>
                             <p className="text-left">The app was created by <a href="http://oktsdesign.com" className="underline hover:cursor-pointer" target="_blank">Yuta Okkotsu</a> for <a href="http://www.coloradorpt.org" className="underline hover:cursor-pointer" target="_blank">Colorado RPT</a></p>
-                            <p className="text-right">v 1.2</p>
+                            <p className="text-right">v 1.2.2</p>
                         </div>
                     </div>
                 </div>

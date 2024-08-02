@@ -24,13 +24,14 @@ const App:React.FC = () => {
   const { setPaddlersState, setRosterState }:paddlerDataStore = usePaddlerDataStore()
 
   // Selects/filters data to include only those where item.roster == true.
+  // Also adds new fields, row:number, boat_pos: number, and onBoat: boolean
   const filterRoster = (data: Paddler[]): Paddler[] => {
     return data
         .filter((item) => item.roster == true)
         .map((item) => ({
           ...item,
           boat_pos: 0,
-          row: -1
+          row: -1,
         })
        )
   }
@@ -95,10 +96,11 @@ const App:React.FC = () => {
         setShowInfo={setShowInfo}
         showInfo={showInfo}
         />
-      <div className="pt-14">
+      <div className="pt-14 ">
         <div className="bg-gradient-to-tl from-violet-200 to-white">
-          <div className="text-black text-2xl font-bold">
-            RPT Dragon Boat Seat Placement
+          <div className="text-pink-900 text-2xl font-bold font-sans flex flex-col text-center">
+            <span>RPT Dragon Boat</span>
+            <span>Seat Placement</span>
           </div>
           <div className="flex justify-center">
             <Loading />

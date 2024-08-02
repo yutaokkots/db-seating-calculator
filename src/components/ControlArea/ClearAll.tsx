@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { paddlerDataStore, usePaddlerDataStore } from '../../lib/store'
+import { 
+    paddlerDataStore, usePaddlerDataStore 
+    } from '../../lib/store'
 
 const ClearAll:React.FC = () => {
-    const { activeRosterState,  setRosterState, toggleClear }:paddlerDataStore = usePaddlerDataStore()
+    const { activeRosterState,  setRosterState, toggleClear, clearBoatState }:paddlerDataStore = usePaddlerDataStore()
     const [ deleteConfirm, setDeleteConfirm ] = useState<boolean>(false);
 
     const clearAllData = () => {
@@ -12,6 +14,7 @@ const ClearAll:React.FC = () => {
             boat_pos: -1
         }))
         setRosterState(updatedRosterState)
+        clearBoatState()
     }
     
     const handleClickDelete = () => {

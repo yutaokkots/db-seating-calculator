@@ -2,6 +2,10 @@ import React from 'react'
 import { Paddler } from '../lib/store';
 import { WindowSize } from '../common/types';
 
+/**
+ * RosterItem, each paddler is displayed and shows their position, if applicable.
+ */
+
 interface RosterItemProp{
     paddler:Paddler;
     windowSize: WindowSize;

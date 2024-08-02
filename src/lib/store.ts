@@ -29,6 +29,7 @@ export interface Paddler {
     roster: boolean;
     row?:number;
     boat_pos?: number; // -1: none, 1: left, 2: right
+    onBoat?: boolean;
 }
 
 export interface ChangePaddlerStatus {
@@ -52,11 +53,26 @@ export interface paddlerDataStore {
     setPaddlersState: (paddlerData: Paddler[]) => void;
     // sets 'activeRosterState' 
     setRosterState: (updateFnOrData: Paddler[] | ((prevState: Paddler[]) => Paddler[])) => void;
+    // adds a new Paddler to the activeRosterState
     addPaddlerToRoster: (newPaddler: Paddler) => void;
+    // filters through the activeRosterState and resets the particular paddler. Then sorts the roster.
     resetSeat: (paddlerName: string, newRow?: number, newBoatPos?: string) => void;
+    // updates the paddler information for specific paddler. Then sorts the roster.
     changePaddlerStatus: (paddlerName: string, newRow?:number,newBoatPos?:number) => void;
+    // toggler that is placed in certain locations to trigger useEffect, found in its dependency array
     toggleClear: (choice: number) => void;
+    // sorts the roster
     sortActiveRosterState: () => void;
+    // boatState holds the Paddler.id as an array of numbers
+    boatState: number[];
+    // counts the number of paddlers on the boat
+    paddlerNumState: number;
+    // adds/removes the paddler.id from the boatState
+    setBoatState: (action: 'add' | 'remove', paddlerId: number) => void;
+    // resets boatState and paddlerNumState
+    clearBoatState: () => void;
+    // takes in activeRosterState:Paddler[] and updates the global 'boatState'.
+    updateBoatStateFromRoster: (newData: Paddler[]) => void;
 }
 
 export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
@@ -77,7 +93,6 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
     },
     addPaddlerToRoster: (newPaddler) => {
         set((state) => {
-
             const newPaddlerRow = newPaddler.row
             const newPaddlerBoatPos = newPaddler.boat_pos
             
@@ -232,6 +247,46 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
             );      
             return { activeRosterState: sortedRoster };    
         });  
+    },
+    boatState: [],
+    paddlerNumState: 0,
+    setBoatState: (action, paddlerId) => {
+        set(state => {
+            let newBoatState;
+            if (action === 'add') {
+                if (!state.boatState.includes(paddlerId)) {
+                    newBoatState = [...state.boatState, paddlerId];
+                } else {
+                    newBoatState = state.boatState; // No change if id already exists
+                }
+            } else if (action === 'remove') {
+                newBoatState = state.boatState.filter(id => id !== paddlerId);
+            } else {
+                newBoatState = state.boatState;
+            }
+            const newPaddlerNumState = newBoatState.length;
+            return {
+                boatState: newBoatState,
+                paddlerNumState: newPaddlerNumState
+            };
+        });
+    },
+    clearBoatState: () => {        
+        set({            
+            boatState: [],            
+            paddlerNumState: 0        
+        });    
+    },
+    updateBoatStateFromRoster: (newData: Paddler[]) => {        
+        set(() => {
+            const newBoatState = newData
+                .filter(paddler => paddler.row && paddler.row > 0)
+                .map(paddler => paddler.id);
+            return {
+                boatState: newBoatState,
+                paddlerNumState: newBoatState.length
+            };
+        });
     }
 }))
 
@@ -242,20 +297,157 @@ export const usePaddlerDataStore = create<paddlerDataStore>((set) => ({
 * @function setModalState - sets the modalState. 
 */
 
-export type SelectedPosition = {
-    row: number,
-    boat_pos: number
-}
-
 export interface ModalDataStore {
     modalState: boolean;
     setModalState: (status:boolean) => void;
+    showMenu: boolean;
+    setShowMenu: (status:boolean) => void;
 }
 
 export const useModalDataStore = create<ModalDataStore>((set) => ({
     modalState: false,
     setModalState: (status: boolean) => {
         set({modalState: status})
+    },
+    // not being used?:
+    showMenu: false,
+    setShowMenu: (status: boolean) => {
+        set({showMenu: status})
     }
 }))
 
+/** 
+* States holding which seat position is selected by the user. 
+* @state {} selectedPosition - an object that holds the row and boat_pos information selected by user.
+* @function setSelectedPosition - sets the selectedPosition. 
+*/
+
+export type SelectedPosition = {
+    row: number,
+    boat_pos: number
+}
+
+export interface SelectedPositionStore {
+    selectedPosition: SelectedPosition;
+    setSelectedPosition: (row: number, boat_pos:number) => void;
+}
+
+export const useSelectedPositionStore = create<SelectedPositionStore>((set) => ({
+    selectedPosition: {row: -1, boat_pos: -1},
+    setSelectedPosition: (row: number, boat_pos: number) => {
+        set({
+            selectedPosition: {row, boat_pos}
+        })
+    }
+}))
+
+/** 
+* States holding the number and/or paddler information of those inside boat.  
+* @state {} boatState - number[], a list of paddler id's.
+* @state {} paddlerNumState - number, records the number of paddlers in the boat.
+* @function setBoatState - (action: 'add' | 'remove', paddlerId: number) => void, sets the boatState. 
+*/
+
+// export interface BoatStore {
+//     boatState: Paddler[];
+//     paddlerNumState: number;
+//     setBoatState: (action: 'add' | 'remove', paddler: Paddler) => void;
+// }
+
+// export const useBoatStore = create<BoatStore>((set) => ({
+//     boatState: [],
+//     paddlerNumState: 0,
+//     setBoatState: (action, paddler) => {
+//         set(state => {
+//             let newBoatState;
+//             if (action === 'add') {
+//                 newBoatState = [...state.boatState, paddler];
+//             } else if (action === 'remove') {
+//                 newBoatState = state.boatState.filter(p => p.id !== paddler.id);
+//             } else {
+//                 newBoatState = state.boatState;
+//             }
+//             const newPaddlerNumState = newBoatState.length;
+
+//                 return {
+//                     boatState: newBoatState,
+//                     paddlerNumState: newPaddlerNumState
+//                 };        
+//             });    
+//     }
+// }))
+
+// export interface BoatStore {
+//     boatState: number[];
+//     paddlerNumState: number;
+//     setBoatState: (action: 'add' | 'remove', paddlerId: number) => void;
+//     clearBoatState: () => void;
+//     updateboatstatefromroster: () => void;
+// }
+
+// export const useBoatStore = create<BoatStore>((set) => ({
+//     boatState: [],
+//     paddlerNumState: 0,
+//     setBoatState: (action, paddlerId) => {
+//         set(state => {
+//             let newBoatState;
+//             if (action === 'add') {
+//                 if (!state.boatState.includes(paddlerId)) {
+//                     newBoatState = [...state.boatState, paddlerId];
+//                 } else {
+//                     newBoatState = state.boatState; // No change if id already exists
+//                 }
+//             } else if (action === 'remove') {
+//                 newBoatState = state.boatState.filter(id => id !== paddlerId);
+//             } else {
+//                 newBoatState = state.boatState;
+//             }
+//             const newPaddlerNumState = newBoatState.length;
+//             return {
+//                 boatState: newBoatState,
+//                 paddlerNumState: newPaddlerNumState
+//             };
+//         });
+//     },
+//     clearBoatState: () => {        
+//         set({            
+//             boatState: [],            
+//             paddlerNumState: 0        
+//         });    
+//     },
+//     updateboatstatefromroster: () => {        
+//         set((state) => {
+//             const newBoatState = state.activeRosterState
+//             .filter(paddler => paddler.row && paddler.row > 0)
+//             .map(paddler => paddler.id);
+//             return {
+//                 boatState: newBoatState,
+//                 paddlerNumState: newBoatState.length
+//             };
+//         });
+//     }
+// }));
+
+/** 
+* States holding the information for displaying or hiding sensitive paddler information.
+* @state {} showWeight - boolean for whether weight is displayed.
+* @function setShowWeight - sets the showWeight state. 
+*/
+
+export interface WeightStore {
+    showWeight: boolean;
+    setShowWeight: () => void;
+    paddlerNumber: number;
+    setPaddlerNumber: (num: number) => void;
+}
+
+export const useWeightStore = create<WeightStore>((set) => ({
+    showWeight: true,
+    setShowWeight: () => {
+        set(state => ({showWeight: !state.showWeight}))
+    },
+    paddlerNumber: 0,
+    setPaddlerNumber: (num: number) => {
+        set({paddlerNumber: num})
+    }
+}))

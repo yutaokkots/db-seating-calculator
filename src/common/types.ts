@@ -23,7 +23,13 @@ export interface Paddler {
     roster: boolean;
     row?:number;
     boat_pos?: number; // -1: none, 1: left, 2: right, 3: drum, 4:right
-
+    onBoat?: boolean;
 }
 
 export type PaddlerKeys = keyof Paddler;
+
+export type SeatSelectionType = (
+    paddlerName: string, 
+    paddlerId: number, 
+    row?: number, 
+    pos?: string ) => void;
