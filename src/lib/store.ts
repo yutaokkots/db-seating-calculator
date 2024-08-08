@@ -372,3 +372,25 @@ export const useWeightStore = create<WeightStore>((set) => ({
         set(state => ({toggleWeightDiff: !state.toggleWeightDiff}))
     }
 }))
+
+/** 
+* States holding the information for swapping seats.
+* @state {} seatSwapperStatus - boolean for whether seatSwapper is active.
+* @function setSeatSwapperStatus - sets the seatSwapperStatus state. 
+*/
+
+export interface SeatSwapperStore {
+    seatSwapperStatus: boolean;
+    setSeatSwapperStatus: () => void;
+    resetSeatSwapperStatus: () => void;
+}
+
+export const useSeatSwapperStore = create<SeatSwapperStore>((set) => ({
+    seatSwapperStatus: false,
+    setSeatSwapperStatus: () => {
+        set((state) => ({seatSwapperStatus : !state.seatSwapperStatus}))
+    },
+    resetSeatSwapperStatus: () => {
+        set(() => ({seatSwapperStatus : false}))
+    }
+}))

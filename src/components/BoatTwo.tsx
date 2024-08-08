@@ -1,5 +1,6 @@
 import React from 'react'
 import Seating from './Seating';
+import SeatingWrapper from './Swapper/SeatingWrapper';
 
 const BoatTwo:React.FC = () => {
     const rows = Array.from({ length: 10 }, (_, i) => i + 1 );
@@ -30,24 +31,39 @@ const BoatTwo:React.FC = () => {
                         </div>
                     </div>
                     <div className="absolute top-[70px] left-1 ">    
-                        <div className="flex flex-col justify-between h-full gap-3 w-[230px]">
-                            {
-                                rows.map((r, idx) => (
+                        <div className="flex flex-col justify-between h-full gap-[10px] w-[230px]">
+                            { rows.map((r, idx) => (
                                     <div 
                                         className="grid grid-cols-11 "
                                         key={idx} >
-                                        <div className="col-span-5">    
-                                            <Seating 
-                                                rowNum={ r }
-                                                position={"left"}/>
+                                        <div className="col-span-5"> 
+                                            <SeatingWrapper
+                                                key={idx}
+                                                disabled={false}
+                                                onClick={() => console.log(`clicked ${r}-left`)}>
+                                                <Seating 
+                                                    rowNum={ r }
+                                                    position={"left"}/>
+                                            </SeatingWrapper>   
                                         </div>
                                         <div className="col-span-1 text-sm font-bold">
+                                            <SeatingWrapper
+                                                key={idx}
+                                                disabled={true}
+                                                onClick={() => console.log(`clicked ${r}-left`)}>
                                             { r }
+                                            </SeatingWrapper>
                                         </div>
                                         <div className="col-span-5">
-                                            <Seating 
-                                                rowNum={ r }
-                                                position={"right"}/>
+                                            <SeatingWrapper
+                                                key={idx}
+                                                disabled={true}
+                                                onClick={() => console.log(`clicked ${r}-left`)}>
+                                                <Seating 
+                                                    rowNum={ r }
+                                                    position={"right"}/>
+                                            </SeatingWrapper>
+
                                         </div>
                                     </div>
                                 ))

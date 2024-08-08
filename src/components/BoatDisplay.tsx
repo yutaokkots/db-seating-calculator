@@ -5,6 +5,7 @@ import { BoatWeight } from './BoatInterface';
 import ShowHideIcons from './Toggler/ShowHideIcons';
 import Toggler from './Toggler/Toggler';
 import { useWeightStore, WeightStore } from '../lib/store';
+import Swapper from './Swapper/Swapper';
 
 interface BoatDisplayProps {
     boatWeight: BoatWeight
@@ -17,9 +18,14 @@ const BoatDisplay:React.FC<BoatDisplayProps> = ({ boatWeight }) => {
     return (
         <>
             <div className=" border-t-2 border-b-2 rounded-2xl">
-                <div className="flex flex-row gap-2 justify-center p-2">
-                    <ShowHideIcons />
-                </div>
+                <div className="relative flex flex-row justify-end items-center h-8">
+                        <div className="absolute left-1/2 -translate-x-1/2">
+                            <ShowHideIcons />
+                        </div>
+                        <div className="mr-5">       
+                            <Swapper />
+                        </div>
+                </div>                    
                 <div className="flex flex-row justify-center items-center gap-1">
                     <div className="flex flex-row ">
                         <div className="flex flex-col items-center justify-center w-[52px] h-[400px] ">

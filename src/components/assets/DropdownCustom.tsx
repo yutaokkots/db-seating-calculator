@@ -283,9 +283,7 @@ const DropdownCustom = forwardRef<{ openMenu:() => void }, DropdownProps>( (prop
         // setSelectedPaddler(defaultPaddler)
         // Resets the selected index (for arrow-key selection in dropdown).
         setSelectedIndex(-1)
-        
     }
-
 
     return (
         <>
